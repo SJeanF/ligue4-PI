@@ -20,7 +20,7 @@ void horizontalWinVerify(int c, int r, position table[r][c], int currentRow) {
   for (int i = 0; i < c; i++) {
     if (table[currentRow][i].symbol == '#') {
       cont++;
-    } else if (cont < 4) {
+    } else if (cont < 4) { // Garante consecutividade das peças
       cont = 0;
     }
   }
@@ -75,7 +75,7 @@ void mainDiagonalWinVerify(int c, int r, position table[r][c], int currentRow,
   }
 }
 
-void AntiDiagonalWinverify(int c, int r, position table[r][c], int currentRow,
+void antiDiagonalWinVerify(int c, int r, position table[r][c], int currentRow,
                            int currentCol) {
   int cont = 1; // inicia com um pois a propria posição adicionada já conta como
                 // criterio de vitoria
@@ -101,7 +101,7 @@ void AntiDiagonalWinverify(int c, int r, position table[r][c], int currentRow,
   }
 
   if (cont >= 4) {
-    printf("alguém ganhou algo na diagonal secundaria");
+    printf("alguém ganhou algo na diagonal secundaria\n");
   }
 }
 
@@ -115,13 +115,22 @@ int addPiece(int c, int r, position table[r][c], int chosenCol, int isPlayer1) {
   }
 
   // Lógica de queda da peça
-  for (int j = 0; j < r; j++) {
-    int reachEndOfTable = table[j + 1][chosenCol].symbol != '.' || j + 1 >= r;
+  for (int i = 0; i < r; i++) {
+    int reachEndOfTable = table[i + 1][chosenCol].symbol != '.' || i + 1 >= r;
 
+    // Adição da peça
     if (reachEndOfTable) {
-      table[j][chosenCol].symbol = pieceToAdd;
+      table[i][chosenCol].symbol = pieceToAdd;
+
+      printf("Jogador %d\n", isPlayer1 ? 1 : 2);
+      showTable(c, r, table);
+
+      // Verificação de vitória
       verticalWinVerify(c, r, table, chosenCol);
-      horizontalWinVerify(c, r, table, j);
+      horizontalWinVerify(c, r, table, i);
+      mainDiagonalWinVerify(c, r, table, i, chosenCol);
+      antiDiagonalWinVerify(c, r, table, i, chosenCol);
+
       return 0;
     }
   }
@@ -143,14 +152,6 @@ int main() {
   }
 
   printf("Tabela Inicial\n");
-  showTable(colNum, rowNum, table);
-
-  addPiece(colNum, rowNum, table, 0, 1);
-  addPiece(colNum, rowNum, table, 1, 1);
-  addPiece(colNum, rowNum, table, 2, 1);
-  addPiece(colNum, rowNum, table, 3, 1);
-
-  printf("Tabela Depois da jogada 1\n");
   showTable(colNum, rowNum, table);
 
   return 0;
