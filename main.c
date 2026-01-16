@@ -9,10 +9,10 @@ typedef struct {
 } position;
 
 
-void showTable(int c,int l, position table[l][c]) {
+void showTable(int c,int r, position table[r][c]) {
 
   
-  for (int i = 0; i < l; i++) {
+  for (int i = 0; i < r; i++) {
     
 
     for (int j = 0; j < c; j++) {
@@ -25,25 +25,114 @@ void showTable(int c,int l, position table[l][c]) {
   printf("\n");
 }
 
-void winVerify(int c, int l, position table[l][c], int currentPieceCoodinates[2]) {
+void horizontalWinVerify(int c, int r, position table[r][c], int currentRow) {
+  int cont = 0;
 
-
+  for (int i = 0; i < c; i++) {
+    if (table[currentRow][i].symbol == '#') {
+      cont++;
+      printf("horizontalmente algo foi encontrado\n\n");
+    } else if (cont < 4) {
+      cont = 0;
+    }
+  }
+  if (cont >= 4) {
+    printf("alguém ganhou saporra, horizontalmente\n");
+  } else {
+    printf("niguem ganhou pica de nada\n");
+  }
 }
 
-void addPiece(int c, int l, position table[l][c], int chosenCol, int isPlayer1) {
+void verticalWinVerify(int c, int r, position table[r][c], int currentCol) {
+  int cont = 0;
+
+  for (int j = 0; j < r; j++) {
+    if (table[j][currentCol].symbol == '#') {
+      cont++;
+    } else if (cont < 4) {
+      cont = 0;
+    }
+  }
+  if (cont >= 4) {
+    printf("alguém ganhou saporra, verticalmente\n");
+  } else {
+    printf("ninguém ganhou pica nenhuma nessa kcta\n");
+  }
+}
+
+void mainDiagonalWinVerify(int c, int r, position table[r][c], int currentRow, int currentCol) {
+  int cont = 1; //inicia com um pois a propria posição adicionada já conta como criterio de vitoria
+  // verificação sentido NW
+  for (int i = currentRow - 1, j = currentCol - 1; i >= 0 && j >= 0; i--, j--) {
+
+    if (table[i][j].symbol == '#') {
+      cont++;
+    } else {
+      break;
+    }
+  }
+
+  // verificação sentido SE
+  for (int i = currentRow + 1, j = currentCol + 1; i < r && j < c; i++, j++) {
+
+    if (table[i][j].symbol == '#') {
+      cont++;
+    } else {
+      break;
+    }
+  }
+
+  if (cont >= 4) {
+    printf("alguém ganhou alguma coisa  na diagonal principal\n");
+  }
+}
+
+void AntiDiagonalWinverify(int c, int r, position table[r][c], int currentRow, int currentCol) {
+    int cont = 1; //inicia com um pois a propria posição adicionada já conta como criterio de vitoria
+    
+    // verificação sentido NE
+  for (int i = currentRow - 1, j = currentCol + 1; i >= 0 && j < c; i--, j++) {
+
+    if (table[i][j].symbol == '#') {
+      cont++;
+    } else {
+      break;
+    }
+  }
+
+  // verificação sentido SW
+  for (int i = currentRow + 1, j = currentCol - 1; i < r && j >= 0; i++, j--) {
+
+    if (table[i][j].symbol == '#') {
+      cont++;
+    } else {
+      break;
+    }
+  }
+
+  if (cont >= 4) {
+    printf("alguém ganhou algo na diagonal secundaria");
+  }
+}
+
+void addPiece(int c, int r, position table[r][c], int chosenCol, int isPlayer1) {
   
   char pieceToAdd = isPlayer1? '#': '@';
 
-  for (int j = 0; j < l; j++) {
+  if (table[0][chosenCol].symbol != '.') {
+    printf("posição invalida, essa coluna está completa");
+  } else {
 
-    if (table[j + 1][chosenCol].symbol != '.' ||   j + 1 > l - 1) {
-
-
-      table[j][chosenCol].symbol = pieceToAdd;
-      int finalPieceCoordinates[2] = {chosenCol, j};
-
-      winVerify(c, l, table, finalPieceCoordinates);
-      return;
+    
+    for (int j = 0; j < r; j++) {
+      
+      if (table[j + 1][chosenCol].symbol != '.' ||   j + 1 > r - 1) {
+        // pode ser j + 1 >= 1?
+        
+        table[j][chosenCol].symbol = pieceToAdd;
+        
+        return;
+      }
     }
   }
 }
@@ -52,10 +141,10 @@ void addPiece(int c, int l, position table[l][c], int chosenCol, int isPlayer1) 
 
 int main() {
 
-  int colNum = 7, lineNum = 6;
-  position table[lineNum][colNum];
+  int colNum = 7, rowNum = 6;
+  position table[rowNum][colNum];
 
-  for (int i = 0; i < lineNum; i++) {
+  for (int i = 0; i < rowNum; i++) {
 
     for (int j = 0; j < colNum; j++) {
 
@@ -64,20 +153,26 @@ int main() {
   }
 
   printf("Tabela Inicial\n");
-  showTable(colNum, lineNum, table);
-  addPiece(colNum, lineNum, table, 3, 1);
-  addPiece(colNum, lineNum, table, 3, 0);
-  addPiece(colNum, lineNum, table, 3, 0);
-  addPiece(colNum, lineNum, table, 0, 1);
-  addPiece(colNum, lineNum, table, 1, 1);
-  addPiece(colNum, lineNum, table, 2, 1);
-  addPiece(colNum, lineNum, table, 2, 0);
-  addPiece(colNum, lineNum, table, 1, 1);
-  addPiece(colNum, lineNum, table, 2, 1);
-  addPiece(colNum, lineNum, table, 3, 1);
+  showTable(colNum, rowNum, table);
 
-  printf("Tabela Final\n");
-  showTable(colNum, lineNum, table);
+  addPiece(colNum, rowNum, table, 0, 1);
+  addPiece(colNum, rowNum, table, 0, 1);
+  addPiece(colNum, rowNum, table, 0, 1);
+  addPiece(colNum, rowNum, table, 0, 1);
+  addPiece(colNum, rowNum, table, 0, 1);
+  addPiece(colNum, rowNum, table, 0, 1);
+  addPiece(colNum, rowNum, table, 0, 1);
+
+  printf("Tabela Depois da jogada\n");
+  showTable(colNum, rowNum, table);
+
+  
+  // horizontalWinVerify(colNum, rowNum, table, 4);
+  // verticalWinVerify(colNum, rowNum, table, 5);
+  // mainDiagonalWinVerify(colNum, rowNum, table, 2, 5);
+  // AntiDiagonalWinverify(colNum, rowNum, table, 3, 3);
+
+  
 
   return 0;
 }
@@ -89,3 +184,15 @@ int main() {
 //  [0, 1, 2, 3, 4, 5, 6], 
 //  [0, 1, 2, 3, 4, 5, 6], 
 //  [0, 1, 2, 3, 4, 5, 6]]
+
+// [
+//   [
+//     0,
+//     1,
+//     2,
+//     3,
+//     4,
+//     5,
+//     6
+//   ],
+// ]
