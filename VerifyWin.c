@@ -2,40 +2,52 @@
 #include "GameStructs.h"
 #include "VerifyWin.h"
 
-int horizontalWinVerify(int c, int r, Position table[r][c], int currentRow,
-                        char symbol) {
-  int cont = 0;
+int horizontalWinVerify(int c, int r, Position table[r][c], int currentRow) {
+  SymbolCont countedSymbol = {table[currentRow][0].symbol, 0};
 
   for (int i = 0; i < c; i++) {
-    if (table[currentRow][i].symbol == symbol) {
-      cont++;
-    } else if (cont < 4) { // Garante consecutividade das peças
-      cont = 0;
+      char currentPosition = table[currentRow][i].symbol;
+
+    if (currentPosition == '.') { // Garante que '.' não seja considerado peça possivel para vitoria
+      continue;
+    }
+
+    if (currentPosition == countedSymbol.symbol) {
+      countedSymbol.cont++;
+      // printf("foram encontrados %d, %c\n", countedSymbol.cont, countedSymbol.symbol);
+    } else if (countedSymbol.cont < 4) { // Garante consecutividade das peças
+      countedSymbol.symbol = currentPosition;
+      // printf("foi encontrado uma quebra na consecutividade, agora o simbolo considerado é '%c'\n", countedSymbol.symbol);
+      countedSymbol.cont = 1; // inicia com 1 pois já considera o atual que ocasionou a troca
     }
   }
 
-  if (cont >= 4) {
-    printf("alguém ganhou saporra, horizontalmente\n");
+  if (countedSymbol.cont >= 4) {
+    printf("o simbolo '%c' ganhou saporra, horizontalmente\n", countedSymbol.symbol);
     return 1;
   }
 
   return 0;
 }
 
-int verticalWinVerify(int c, int r, Position table[r][c], int currentCol,
-                      char symbol) {
-  int cont = 0;
+int verticalWinVerify(int c, int r, Position table[r][c], int currentCol) {
+  SymbolCont countedSymbol = {table[0][currentCol].symbol, 0};
 
   for (int j = 0; j < r; j++) {
-    if (table[j][currentCol].symbol == symbol) {
-      cont++;
-    } else if (cont < 4) {
-      cont = 0;
+    char currentPosition = table[j][currentCol].symbol;
+    if (currentPosition == '.') {
+      continue;
+    }
+    if (table[j][currentCol].symbol == countedSymbol.symbol) {
+      countedSymbol.cont++;
+    } else if (countedSymbol.cont < 4) {
+      countedSymbol.symbol = currentPosition;
+      countedSymbol.cont = 1;
     }
   }
 
-  if (cont >= 4) {
-    printf("alguém ganhou saporra, verticalmente\n");
+  if (countedSymbol.cont >= 4) {
+    printf("o simbolo '%c' ganhou saporra, verticalmente\n", countedSymbol.symbol);
     return 1;
   }
 
@@ -43,14 +55,14 @@ int verticalWinVerify(int c, int r, Position table[r][c], int currentCol,
 }
 
 int mainDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow,
-                          int currentCol, char symbol) {
-  int cont = 1; // inicia com um pois a propria posição adicionada já conta como
+                          int currentCol) {
+  SymbolCont countedSymbol = {table[currentRow][currentCol].symbol, 1}; // inicia com um pois a propria posição adicionada já conta como
                 // criterio de vitoria
   // verificação sentido NW
   for (int i = currentRow - 1, j = currentCol - 1; i >= 0 && j >= 0; i--, j--) {
 
-    if (table[i][j].symbol == symbol) {
-      cont++;
+    if (table[i][j].symbol == countedSymbol.symbol) {
+      countedSymbol.cont++;
     } else {
       break;
     }
@@ -59,15 +71,15 @@ int mainDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow,
   // verificação sentido SE
   for (int i = currentRow + 1, j = currentCol + 1; i < r && j < c; i++, j++) {
 
-    if (table[i][j].symbol == '#') {
-      cont++;
+    if (table[i][j].symbol == countedSymbol.symbol) {
+      countedSymbol.cont++;
     } else {
       break;
     }
   }
 
-  if (cont >= 4) {
-    printf("alguém ganhou alguma coisa  na diagonal principal\n");
+  if (countedSymbol.cont >= 4) {
+    printf("alguém ganhou alguma coisa na diagonal principal\n");
     return 1;
   }
 
@@ -75,15 +87,15 @@ int mainDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow,
 }
 
 int antiDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow,
-                          int currentCol, char symbol) {
-  int cont = 1; // inicia com um pois a propria posição adicionada já conta como
+                          int currentCol) {
+  SymbolCont countedSymbol = {table[currentRow][currentCol].symbol, 1}; // inicia com um pois a propria posição adicionada já conta como
                 // criterio de vitoria
 
   // verificação sentido NE
   for (int i = currentRow - 1, j = currentCol + 1; i >= 0 && j < c; i--, j++) {
 
-    if (table[i][j].symbol == symbol) {
-      cont++;
+    if (table[i][j].symbol == countedSymbol.symbol) {
+      countedSymbol.cont++;
     } else {
       break;
     }
@@ -92,14 +104,14 @@ int antiDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow,
   // verificação sentido SW
   for (int i = currentRow + 1, j = currentCol - 1; i < r && j >= 0; i++, j--) {
 
-    if (table[i][j].symbol == '#') {
-      cont++;
+    if (table[i][j].symbol == countedSymbol.symbol) {
+      countedSymbol.cont++;
     } else {
       break;
     }
   }
 
-  if (cont >= 4) {
+  if (countedSymbol.cont >= 4) {
     printf("alguém ganhou algo na diagonal secundaria\n");
     return 1;
   }

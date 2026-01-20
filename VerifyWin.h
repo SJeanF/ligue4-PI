@@ -3,16 +3,14 @@
 #ifndef VERIFYWIN_H
 #define VERIFYWIN_H
 
-int horizontalWinVerify(int c, int r, Position table[r][c], int currentRow,
-                        char symbol);
+int horizontalWinVerify(int c, int r, Position table[r][c], int currentRow);
 
-int verticalWinVerify(int c, int r, Position table[r][c], int currentCol,
-                      char symbol);
+int verticalWinVerify(int c, int r, Position table[r][c], int currentCol);
 
 int mainDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow,
-                          int currentCol, char symbol);
+                          int currentCol);
 
 int antiDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow,
-                          int currentCol, char symbol);
+                          int currentCol);
 
 #endif

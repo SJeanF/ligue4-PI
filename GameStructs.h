@@ -10,4 +10,9 @@ typedef struct {
   char name[50];
 } Player;
 
+typedef struct {
+  char symbol;
+  int cont;
+} SymbolCont;
+
 #endif // GAMESTRUCTS_H
