@@ -26,19 +26,12 @@ int addPiece(int c, int r, Position table[r][c], int chosenCol, Player player) {
 
     // Adição da peça
     if (reachEndOfTable) {
-      table[i][chosenCol].symbol = *player.symbol;
-
-      printf("Jogador %s\n", player.name);
-      showTable(c, r, table);
-
-      // Verificação de vitória
-      verifyLocalWin(c, r, table, i, chosenCol);
-
-      return 0;
+      table[i][chosenCol].symbol = player.symbol;
+      return i; // retorna a linha onde foi adicionada a peça
     }
   }
 
-  return 0;
+  return -1;
 }
 
 void fillTable(int colNum, int rowNum, Position table[rowNum][colNum]) {
