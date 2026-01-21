@@ -79,7 +79,7 @@ int mainDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow,
   }
 
   if (countedSymbol.cont >= 4) {
-    printf("alguém ganhou alguma coisa na diagonal principal\n");
+    printf("%c ganhou algo na diagonal principal\n", countedSymbol.symbol);
     return 1;
   }
 
@@ -112,7 +112,7 @@ int antiDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow,
   }
 
   if (countedSymbol.cont >= 4) {
-    printf("alguém ganhou algo na diagonal secundaria\n");
+    printf("%c ganhou algo na diagonal secundaria\n", countedSymbol.symbol);
     return 1;
   }
 
