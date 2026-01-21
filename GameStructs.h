@@ -3,6 +3,7 @@
 
 typedef struct {
   char symbol;
+  char color[50];
 } Position;
 
 typedef struct {

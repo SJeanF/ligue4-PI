@@ -4,10 +4,12 @@
 #include <stdio.h>
 #include <string.h>
 
+#define RESET "\033[0m"
+
 void showTable(int c, int r, Position table[r][c]) {
   for (int i = 0; i < r; i++) {
     for (int j = 0; j < c; j++) {
-      printf(" %c ", table[i][j].symbol);
+      printf("%s %c "RESET, table[i][j].color, table[i][j].symbol);
     }
     printf("\n");
   }
@@ -27,6 +29,7 @@ int addPiece(int c, int r, Position table[r][c], int chosenCol, Player player) {
     // Adição da peça
     if (reachEndOfTable) {
       table[i][chosenCol].symbol = player.symbol;
+      strcpy(table[i][chosenCol].color, "\033[0;31m"); // COR TESTE
       return i; // retorna a linha onde foi adicionada a peça
     }
   }
@@ -38,6 +41,7 @@ void fillTable(int colNum, int rowNum, Position table[rowNum][colNum]) {
   for (int i = 0; i < rowNum; i++) {
     for (int j = 0; j < colNum; j++) {
       table[i][j].symbol = '.';
+      strcpy(table[i][j].color, "\033[0m");
     }
   }
 }
