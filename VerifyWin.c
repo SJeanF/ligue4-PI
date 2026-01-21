@@ -118,3 +118,39 @@ int antiDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow,
 
   return 0;
 }
+
+void globalWinVerify(int c, int r, Position table[r][c]) {
+
+  for (int i = 0; i < r; i++) {
+    horizontalWinVerify(c, r, table, i);
+  }
+
+  for (int j = 0; j < c; j++) {
+    verticalWinVerify(c, r, table, j);
+  }
+
+  for (int l = 3; l <= 4; l++) {
+    for (int i = l, j = 2; i >= 1 && j <= 4; i--, j++) {
+      mainDiagonalWinVerify(c, r, table, i, j);
+    }
+  }
+
+  for (int l = 1; l <= 2; l++) {
+    for (int i = l, j = 2; i <= 4 && j <= 4; i++, j++) {
+      antiDiagonalWinVerify(c, r, table, i, j);
+    }
+  }
+}
+
+void verifyLocalWin(int c, int r, Position table[r][c], int currentRow,
+              int currentCol) {
+  if (horizontalWinVerify(c, r, table, currentRow))
+    return;
+  if (verticalWinVerify(c, r, table, currentCol))
+    return;
+  if (mainDiagonalWinVerify(c, r, table, currentRow, currentCol))
+    return;
+  if (antiDiagonalWinVerify(c, r, table, currentRow, currentCol))
+    return;
+  return;
+}

@@ -13,4 +13,9 @@ int mainDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow,
 int antiDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow,
                           int currentCol);
 
+void globalWinVerify(int c, int r, Position table[r][c]);
+
+void verifyLocalWin(int c, int r, Position table[r][c], int currentRow,
+              int currentCol);
+
 #endif
