@@ -42,7 +42,7 @@ void fillTable(int colNum, int rowNum, Position table[rowNum][colNum]) {
   }
 }
 
-int completeBoard(int colNum, int rowNum, Position table[rowNum][colNum],
+void completeBoard(int colNum, int rowNum, Position table[rowNum][colNum],
                   Player player1, Player player2) {
   // Coluna 0
   addPiece(colNum, rowNum, table, 0, player1);
