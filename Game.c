@@ -5,10 +5,13 @@
 #include <string.h>
 
 void initializeGame(Game *game) {
-  game->players[0].name[0] = '\0';
-  game->players[0].symbol = '\0';
-  game->players[1].name[0] = '\0';
-  game->players[1].symbol = '\0';
+  for (int i = 0; i < 2; i++) {
+    game->players[i].name[0] = '\0';
+    game->players[i].symbol = '\0';
+    game->players[i].baseCount = 0;
+    game->players[i].portalCount = 0;
+    game->players[i].explosiveCount = 0;
+  }
   game->roundCount = 0;
   fillTable(7, 6, game->table);
 }
@@ -37,7 +40,7 @@ int playRound(Game *game) {
     scanf("%d", &col);
     col--; // 0 passa a ser a primeira coluna
 
-    int row = addPiece(7, 6, game->table, col, game->players[i]);
+    int row = addPiece(7, 6, game->table, col, game->players[i], 0);
     char result = verifyLocalWin(7, 6, game->table, row, col);
 
     if (result != '\0') {

@@ -5,18 +5,26 @@
 #include <string.h>
 
 #define RESET "\033[0m"
+#define RED   "\033[0;31m"
+#define GREEN "\033[0;32m"
 
 void showTable(int c, int r, Position table[r][c]) {
   for (int i = 0; i < r; i++) {
     for (int j = 0; j < c; j++) {
-      printf("%s %c "RESET, table[i][j].color, table[i][j].symbol);
+        Position pos = table[i][j];
+        char color[50] = "\033[0m";
+
+        if (pos.pieceType == 1) strcpy(color, "\033[0;34m");
+        else if (pos.pieceType == 2) strcpy(color, "\033[0;31m");
+
+      printf("%s %c "RESET, color, pos.symbol);
     }
     printf("\n");
   }
   printf("\n");
 }
 
-int addPiece(int c, int r, Position table[r][c], int chosenCol, Player player) {
+int addPiece(int c, int r, Position table[r][c], int chosenCol, Player player, int pieceType) {
   // caso não tenha como colocar peça
   if (table[0][chosenCol].symbol != '.') {
     return printf("posição invalida, essa coluna está completa\n");
@@ -29,7 +37,7 @@ int addPiece(int c, int r, Position table[r][c], int chosenCol, Player player) {
     // Adição da peça
     if (reachEndOfTable) {
       table[i][chosenCol].symbol = player.symbol;
-      strcpy(table[i][chosenCol].color, "\033[0;31m"); // COR TESTE
+      table[i][chosenCol].pieceType = pieceType;
       return i; // retorna a linha onde foi adicionada a peça
     }
   }
@@ -41,66 +49,7 @@ void fillTable(int colNum, int rowNum, Position table[rowNum][colNum]) {
   for (int i = 0; i < rowNum; i++) {
     for (int j = 0; j < colNum; j++) {
       table[i][j].symbol = '.';
-      strcpy(table[i][j].color, "\033[0m");
+      table[i][j].pieceType = -1;
     }
   }
-}
-
-void completeBoard(int colNum, int rowNum, Position table[rowNum][colNum],
-                  Player player1, Player player2) {
-  // Coluna 0
-  addPiece(colNum, rowNum, table, 0, player1);
-  addPiece(colNum, rowNum, table, 0, player2);
-  addPiece(colNum, rowNum, table, 0, player2);
-  addPiece(colNum, rowNum, table, 0, player1);
-  addPiece(colNum, rowNum, table, 0, player1);
-  addPiece(colNum, rowNum, table, 0, player2);
-
-  // Coluna 1
-  addPiece(colNum, rowNum, table, 1, player2);
-  addPiece(colNum, rowNum, table, 1, player1);
-  addPiece(colNum, rowNum, table, 1, player1);
-  addPiece(colNum, rowNum, table, 1, player2);
-  addPiece(colNum, rowNum, table, 1, player1);
-  addPiece(colNum, rowNum, table, 1, player2);
-
-  // Coluna 2
-  addPiece(colNum, rowNum, table, 2, player1);
-  addPiece(colNum, rowNum, table, 2, player2);
-  addPiece(colNum, rowNum, table, 2, player1);
-  addPiece(colNum, rowNum, table, 2, player1);
-  addPiece(colNum, rowNum, table, 2, player2);
-  addPiece(colNum, rowNum, table, 2, player2);
-
-  // Coluna 3
-  addPiece(colNum, rowNum, table, 3, player2);
-  addPiece(colNum, rowNum, table, 3, player2);
-  addPiece(colNum, rowNum, table, 3, player1);
-  addPiece(colNum, rowNum, table, 3, player1);
-  addPiece(colNum, rowNum, table, 3, player2);
-  addPiece(colNum, rowNum, table, 3, player1);
-
-  // Coluna 4
-  addPiece(colNum, rowNum, table, 4, player1);
-  addPiece(colNum, rowNum, table, 4, player1);
-  addPiece(colNum, rowNum, table, 4, player2);
-  addPiece(colNum, rowNum, table, 4, player2);
-  addPiece(colNum, rowNum, table, 4, player1);
-  addPiece(colNum, rowNum, table, 4, player2);
-
-  // Coluna 5
-  addPiece(colNum, rowNum, table, 5, player2);
-  addPiece(colNum, rowNum, table, 5, player1);
-  addPiece(colNum, rowNum, table, 5, player2);
-  addPiece(colNum, rowNum, table, 5, player1);
-  addPiece(colNum, rowNum, table, 5, player1);
-  addPiece(colNum, rowNum, table, 5, player2);
-
-  // Coluna 6
-  addPiece(colNum, rowNum, table, 6, player1);
-  addPiece(colNum, rowNum, table, 6, player2);
-  addPiece(colNum, rowNum, table, 6, player1);
-  addPiece(colNum, rowNum, table, 6, player2);
-  addPiece(colNum, rowNum, table, 6, player2);
-  addPiece(colNum, rowNum, table, 6, player1);
 }

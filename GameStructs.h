@@ -3,12 +3,15 @@
 
 typedef struct {
   char symbol;
-  char color[50];
+  int pieceType;
 } Position;
 
 typedef struct {
   char symbol;
   char name[50];
+  int baseCount;
+  int portalCount;
+  int explosiveCount;
 } Player;
 
 typedef struct {
