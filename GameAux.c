@@ -5,8 +5,6 @@
 #include <string.h>
 
 #define RESET "\033[0m"
-#define RED   "\033[0;31m"
-#define GREEN "\033[0;32m"
 
 void showTable(int c, int r, Position table[r][c]) {
   for (int i = 0; i < r; i++) {

@@ -8,7 +8,7 @@ void initializeGame(Game *game) {
   for (int i = 0; i < 2; i++) {
     game->players[i].name[0] = '\0';
     game->players[i].symbol = '\0';
-    game->players[i].baseCount = 0;
+    game->players[i].baseCount = 21;
     game->players[i].portalCount = 0;
     game->players[i].explosiveCount = 0;
   }
@@ -28,7 +28,17 @@ void setPlayer(Game *game, char name[], char symbol, int player) {
 
 int playRound(Game *game) {
   game->roundCount++;
-  printf("\nRound %d começou\n", game->roundCount);
+  printf("\n\n-----Round %d começou-----\n", game->roundCount);
+
+  // Ganho de peças por rodada
+  if (game->roundCount % 10 == 0) {
+    printf("\nOs jogadores ganharam duas peças especiais!\n");
+
+    for (int i = 0; i < 2; i++) {
+      game->players[i].explosiveCount++;
+      game->players[i].portalCount++;
+    }
+  }
 
   for (int i = 0; i < 2; i++) {
     int col = 0;
@@ -36,11 +46,41 @@ int playRound(Game *game) {
     printf("\nÉ a vez de %s\n", game->players[i].name);
     printf("Tabela:\n");
     showTable(7, 6, game->table);
-    printf("Escolha a coluna: ");
+
+    // Escolha do tipo da ficha
+    int pieceType = -1;
+
+    printf("Fichas disponíveis:\n");
+    printf("[0] Básicas: %d\n", game->players[i].baseCount);
+    printf("[1] Portais: %d\n", game->players[i].portalCount);
+    printf("[2] Explosivos: %d\n", game->players[i].explosiveCount);
+    while (pieceType == -1) {
+      printf("Escolha: ");
+      scanf("%d", &pieceType);
+
+      // Condicionais de disponibilidade
+      int basicAvailable = game->players[i].baseCount > 0;
+      int portalAvailable = game->players[i].portalCount > 0;
+      int explosiveAvailable = game->players[i].explosiveCount > 0;
+
+      // Diminuição da quantidade de peças
+      if (pieceType == 0 && basicAvailable)
+        game->players[i].baseCount--;
+      else if (pieceType == 1 && portalAvailable)
+        game->players[i].portalCount--;
+      else if (pieceType == 2 && explosiveAvailable)
+        game->players[i].explosiveCount--;
+      else {
+        printf("\nFicha indisponível!\n");
+        pieceType = -1;
+      }
+    }
+
+    printf("\nEscolha a coluna: ");
     scanf("%d", &col);
     col--; // 0 passa a ser a primeira coluna
 
-    int row = addPiece(7, 6, game->table, col, game->players[i], 0);
+    int row = addPiece(7, 6, game->table, col, game->players[i], pieceType);
     char result = verifyLocalWin(7, 6, game->table, row, col);
 
     if (result != '\0') {
@@ -68,6 +108,7 @@ void playGame(Game *game) {
 
     if (choice == 1) {
       initializeGame(game);
+      game->roundCount = 9;
 
       printf("\n-----Jogador 1-----\n");
       printf("Nome: ");
