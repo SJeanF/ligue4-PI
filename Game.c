@@ -31,6 +31,7 @@ int playRound(Game* game) {
         int col = 0;
 
         printf("É a vez de %s\n", game->players[i].name);
+        printf("Tabela:\n");
         showTable(7, 6, game->table);
         printf("Escolha a coluna: ");
         scanf("%d", &col);
@@ -40,11 +41,14 @@ int playRound(Game* game) {
         char result = verifyLocalWin(7, 6, game->table, row, col);
 
         if (result != '\0') {
+            showTable(7, 6, game->table);
             printf("%s venceu!\n", game->players[i].name);
             return 1;
             break;
         }
     }
+
+    return 0;
 }
 
 void playGame(Game* game) {
