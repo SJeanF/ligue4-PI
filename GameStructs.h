@@ -6,7 +6,7 @@ typedef struct {
 } Position;
 
 typedef struct {
-  char *symbol;
+  char symbol;
   char name[50];
 } Player;
 

@@ -2,7 +2,7 @@
 #include "GameStructs.h"
 #include "VerifyWin.h"
 
-int horizontalWinVerify(int c, int r, Position table[r][c], int currentRow) {
+char horizontalWinVerify(int c, int r, Position table[r][c], int currentRow) {
   SymbolCont countedSymbol = {table[currentRow][0].symbol, 0};
 
   for (int i = 0; i < c; i++) {
@@ -23,14 +23,13 @@ int horizontalWinVerify(int c, int r, Position table[r][c], int currentRow) {
   }
 
   if (countedSymbol.cont >= 4) {
-    printf("o simbolo '%c' ganhou saporra, horizontalmente\n", countedSymbol.symbol);
-    return 1;
+    return countedSymbol.symbol;
   }
 
-  return 0;
+  return '\0';
 }
 
-int verticalWinVerify(int c, int r, Position table[r][c], int currentCol) {
+char verticalWinVerify(int c, int r, Position table[r][c], int currentCol) {
   SymbolCont countedSymbol = {table[0][currentCol].symbol, 0};
 
   for (int j = 0; j < r; j++) {
@@ -47,14 +46,13 @@ int verticalWinVerify(int c, int r, Position table[r][c], int currentCol) {
   }
 
   if (countedSymbol.cont >= 4) {
-    printf("o simbolo '%c' ganhou saporra, verticalmente\n", countedSymbol.symbol);
-    return 1;
+    return countedSymbol.symbol;
   }
 
-  return 0;
+  return '\0';
 }
 
-int mainDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow,
+char mainDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow,
                           int currentCol) {
   SymbolCont countedSymbol = {table[currentRow][currentCol].symbol, 1}; // inicia com um pois a propria posição adicionada já conta como
                 // criterio de vitoria
@@ -79,14 +77,13 @@ int mainDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow,
   }
 
   if (countedSymbol.cont >= 4) {
-    printf("alguém ganhou alguma coisa na diagonal principal\n");
-    return 1;
+    return countedSymbol.symbol;
   }
 
-  return 0;
+  return '\0';
 }
 
-int antiDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow,
+char antiDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow,
                           int currentCol) {
   SymbolCont countedSymbol = {table[currentRow][currentCol].symbol, 1}; // inicia com um pois a propria posição adicionada já conta como
                 // criterio de vitoria
@@ -112,11 +109,10 @@ int antiDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow,
   }
 
   if (countedSymbol.cont >= 4) {
-    printf("alguém ganhou algo na diagonal secundaria\n");
-    return 1;
+    return countedSymbol.symbol;
   }
 
-  return 0;
+  return '\0';
 }
 
 void globalWinVerify(int c, int r, Position table[r][c]) {
@@ -142,15 +138,19 @@ void globalWinVerify(int c, int r, Position table[r][c]) {
   }
 }
 
-void verifyLocalWin(int c, int r, Position table[r][c], int currentRow,
+char verifyLocalWin(int c, int r, Position table[r][c], int currentRow,
               int currentCol) {
-  if (horizontalWinVerify(c, r, table, currentRow))
-    return;
-  if (verticalWinVerify(c, r, table, currentCol))
-    return;
-  if (mainDiagonalWinVerify(c, r, table, currentRow, currentCol))
-    return;
-  if (antiDiagonalWinVerify(c, r, table, currentRow, currentCol))
-    return;
-  return;
+    char result = horizontalWinVerify(c, r, table, currentRow);
+    if (result != '\0')
+        return result;
+    result = verticalWinVerify(c, r, table, currentCol);
+    if (result != '\0')
+        return result;
+    result = mainDiagonalWinVerify(c, r, table, currentRow, currentCol);
+    if (result != '\0')
+        return result;
+    result = antiDiagonalWinVerify(c, r, table, currentRow, currentCol);
+    if (result != '\0')
+        return result;
+    return '\0';
 }
