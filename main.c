@@ -6,10 +6,6 @@
 
 int main() {
   Game game;
-  initializeGame(&game);
-  setPlayer(&game, "Douglas", '@', 1);
-  setPlayer(&game, "Luiz", '#', 2);
   playGame(&game);
-
   return 0;
 }
