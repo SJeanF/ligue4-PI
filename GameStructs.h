@@ -12,6 +12,7 @@ typedef struct {
   int baseCount;
   int portalCount;
   int explosiveCount;
+  int isBot;
 } Player;
 
 typedef struct {

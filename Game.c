@@ -2,6 +2,7 @@
 #include "GameAux.h"
 #include "VerifyWin.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 void initializeGame(Game *game) {
@@ -16,14 +17,97 @@ void initializeGame(Game *game) {
   fillTable(7, 6, game->table);
 }
 
-void setPlayer(Game *game, char name[], char symbol, int player) {
-  if (player == 1) {
-    strcpy(game->players[0].name, name);
-    game->players[0].symbol = symbol;
-  } else if (player == 2) {
-    strcpy(game->players[1].name, name);
-    game->players[1].symbol = symbol;
+void setPlayer(Player players[], int playerId) {
+    printf("\n-----Jogador %d-----\n", playerId + 1);
+
+    printf("Nome: ");
+    scanf("%s", players[playerId].name);
+
+    if (playerId > 0) {
+        while (strcmp(players[playerId].name, players[playerId - 1].name) == 0) {
+            printf("Erro: O nome nao pode ser igual ao do Jogador %d.\n", playerId);
+            printf("Digite outro Nome: ");
+            scanf("%s", players[playerId].name);
+        }
+    }
+
+    printf("Simbolo: ");
+    scanf(" %c", &players[playerId].symbol);
+
+    if (playerId > 0) {
+        while (players[playerId].symbol == players[playerId - 1].symbol) {
+            printf("Erro: O simbolo nao pode ser igual ao do Jogador %d.\n", playerId);
+            printf("Escolha outro Simbolo: ");
+            scanf(" %c", &players[playerId].symbol);
+        }
+    }
+    players[playerId].isBot = 0;
+}
+
+void selectGameMode(Game *game) {
+  int gameMode = -1;
+  while (gameMode == -1) {
+
+    printf("\nModos de jogo disponiveis:\n");
+    printf("[0] - Automático\n");
+    printf("[1] - Um Jogador\n");
+    printf("[2] - Dois Jogador\n");
+    printf("Escolha: ");
+    scanf("%d", &gameMode);
+    
+    if (gameMode < 0 || gameMode > 2) {
+      printf("Opção não disponivel, por favor selecionar modo de jogo listado\n");
+      gameMode = -1;
+      continue;
+    }
   }
+
+  if (gameMode == 0) {
+    strcpy(game->players[0].name, "Bot - 1");
+    game->players[0].symbol = '#';
+    game->players[0].isBot = 1;
+    strcpy(game->players[1].name, "Bot - 2");
+    game->players[1].symbol = '@';
+    game->players[1].isBot = 1;
+  } else if (gameMode == 1) {
+    setPlayer(game->players, 0);
+    
+    // garantir que o bot não vai ter o mesmo nome/simbolo que o jogador
+    if (strcmp(game->players[0].name, "Bot - 1") == 0) {
+      strcpy(game->players[1].name, "Bot - 2");
+    } else {
+      strcpy(game->players[1].name, "Bot - 1");
+    }
+    
+    if (game->players[0].symbol == '@') {
+      game-> players[1].symbol = '#';
+    } else {
+      game->players[1].symbol = '@';
+    }
+    game->players[1].isBot = 1;
+  } else if (gameMode == 2) {
+    for (int i = 0; i < 2; i++) { 
+      setPlayer(game->players, i);
+    }
+  }
+}
+
+void botPlayMessage(botName, pieceType, col) {
+  printf("%s jogou uma ficha ", botName);
+  switch (pieceType) {
+  case 0:
+    printf("basica ");
+    break;
+  case 1:
+    printf("portal ");
+    break;
+  case 2:
+    printf("explosiva ");
+    break;
+  default:
+    break;
+  }
+  printf("na coluna %d\n", col + 1);
 }
 
 int playRound(Game *game) {
@@ -50,37 +134,70 @@ int playRound(Game *game) {
     // Escolha do tipo da ficha
     int pieceType = -1;
 
-    printf("Fichas disponíveis:\n");
-    printf("[0] Básicas: %d\n", game->players[i].baseCount);
-    printf("[1] Portais: %d\n", game->players[i].portalCount);
-    printf("[2] Explosivos: %d\n", game->players[i].explosiveCount);
-    while (pieceType == -1) {
-      printf("Escolha: ");
-      scanf("%d", &pieceType);
+    // Condicionais de disponibilidade
+    int basicAvailable = game->players[i].baseCount > 0;
+    int portalAvailable = game->players[i].portalCount > 0;
+    int explosiveAvailable = game->players[i].explosiveCount > 0;
 
-      // Condicionais de disponibilidade
-      int basicAvailable = game->players[i].baseCount > 0;
-      int portalAvailable = game->players[i].portalCount > 0;
-      int explosiveAvailable = game->players[i].explosiveCount > 0;
+    if (game->players[i].isBot) {
+      
+      int availableOptions[3];
+      int optionsCont = 0;
 
-      // Diminuição da quantidade de peças
-      if (pieceType == 0 && basicAvailable)
-        game->players[i].baseCount--;
-      else if (pieceType == 1 && portalAvailable)
-        game->players[i].portalCount--;
-      else if (pieceType == 2 && explosiveAvailable)
-        game->players[i].explosiveCount--;
-      else {
-        printf("\nFicha indisponível!\n");
-        pieceType = -1;
+      // Logica da ecolha de peça do bot
+      if (basicAvailable) {
+        availableOptions[optionsCont] = 0;
+        optionsCont++;
       }
+      if (portalAvailable ) {
+        availableOptions[optionsCont] = 1;
+        optionsCont++;
+      }
+      if (explosiveAvailable) {
+        availableOptions[optionsCont] = 2;
+        optionsCont++;
+      }
+      pieceType = availableOptions[rand() % optionsCont];
+      col = rand() % 7; 
+      
+      botPlayMessage(game->players[i].name, pieceType, col);
+    } else {
+      printf("Fichas disponíveis:\n");
+      printf("[0] Básicas: %d\n", game->players[i].baseCount);
+      printf("[1] Portais: %d\n", game->players[i].portalCount);
+      printf("[2] Explosivos: %d\n", game->players[i].explosiveCount);
+      while (pieceType == -1) {
+        printf("Escolha: ");
+        scanf("%d", &pieceType);
+  
+        // Diminuição da quantidade de peças
+        if (pieceType == 0 && basicAvailable)
+          game->players[i].baseCount--;
+        else if (pieceType == 1 && portalAvailable)
+          game->players[i].portalCount--;
+        else if (pieceType == 2 && explosiveAvailable)
+          game->players[i].explosiveCount--;
+        else {
+          printf("\nFicha indisponível!\n");
+          pieceType = -1;
+        }
+      }
+      
+      // Validação da coluna escolhida
+      while (1) {
+        printf("\nEscolha a coluna: ");
+        scanf("%d", &col); 
+
+        if (col > 0 && col < 8) {
+          break;
+        } else {
+          printf("Coluna invalida, por favor selecionar uma coluna entre 1 e 7\n");
+        }
+      }
+      col--; // 0 passa a ser a primeira coluna
     }
 
-    printf("\nEscolha a coluna: ");
-    scanf("%d", &col);
-    col--; // 0 passa a ser a primeira coluna
-
-    int row = addPiece(7, 6, game->table, col, game->players[i], pieceType);
+    int row = addPiece(7, 6, game->table, col, game->players[i], pieceType); // falta fazer o jogador jogar denovo se a coluna estiver cheia
     char result = verifyLocalWin(7, 6, game->table, row, col);
 
     if (result != '\0') {
@@ -108,21 +225,9 @@ void playGame(Game *game) {
 
     if (choice == 1) {
       initializeGame(game);
-      game->roundCount = 9;
+      selectGameMode(game);
 
-      printf("\n-----Jogador 1-----\n");
-      printf("Nome: ");
-      scanf("%s", game->players[0].name);
-      printf("Simbolo: ");
-      scanf(" %c", &game->players[0].symbol);
-
-      printf("\n-----Jogador 2-----\n");
-      printf("Nome: ");
-      scanf("%s", game->players[1].name);
-      printf("Simbolo: ");
-      scanf(" %c", &game->players[1].symbol);
-
-      while (playRound(game) != 1) {
+      while (playRound(game) != 1) {  //pra que serve esse while com nenhum codigo?
       }
 
       printf("\nVocê deseja continuar jogando? \n");
