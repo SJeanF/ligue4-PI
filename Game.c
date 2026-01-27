@@ -92,7 +92,7 @@ void selectGameMode(Game *game) {
   }
 }
 
-void botPlayMessage(botName, pieceType, col) {
+void botPlayMessage(char* botName, int pieceType, int col) {
   printf("%s jogou uma ficha ", botName);
   switch (pieceType) {
   case 0:
