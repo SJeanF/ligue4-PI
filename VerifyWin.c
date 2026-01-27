@@ -9,6 +9,7 @@ char horizontalWinVerify(int c, int r, Position table[r][c], int currentRow) {
       char currentPosition = table[currentRow][i].symbol;
 
     if (currentPosition == '.') { // Garante que '.' não seja considerado peça possivel para vitoria
+      countedSymbol.cont = 0;
       continue;
     }
 
@@ -35,6 +36,7 @@ char verticalWinVerify(int c, int r, Position table[r][c], int currentCol) {
   for (int j = 0; j < r; j++) {
     char currentPosition = table[j][currentCol].symbol;
     if (currentPosition == '.') {
+      countedSymbol.cont = 0;
       continue;
     }
     if (table[j][currentCol].symbol == countedSymbol.symbol) {
