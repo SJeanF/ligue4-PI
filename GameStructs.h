@@ -4,6 +4,7 @@
 typedef struct {
   char symbol;
   int pieceType;
+  int isWin;
 } Position;
 
 typedef struct {
@@ -18,6 +19,7 @@ typedef struct {
 typedef struct {
   char symbol;
   int cont;
+  int coordinates[7][2]
 } SymbolCont;
 
 #endif // GAMESTRUCTS_H

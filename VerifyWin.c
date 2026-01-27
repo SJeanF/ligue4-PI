@@ -1,29 +1,42 @@
 #include <stdio.h>
 #include "GameStructs.h"
+#include "GameAux.h"
 #include "VerifyWin.h"
 
 char horizontalWinVerify(int c, int r, Position table[r][c], int currentRow) {
-  SymbolCont countedSymbol = {table[currentRow][0].symbol, 0};
+  SymbolCont countedSymbol = {table[currentRow][0].symbol, 0, {{}}};
 
   for (int i = 0; i < c; i++) {
-      char currentPosition = table[currentRow][i].symbol;
+    char currentPosition = table[currentRow][i].symbol;
 
-    if (currentPosition == '.') { // Garante que '.' não seja considerado peça possivel para vitoria
+    
+    if (currentPosition == '.' && countedSymbol.cont < 4) {
       countedSymbol.cont = 0;
+      continue;
+    }
+    if (currentPosition == '.') { // Garante que '.' não seja considerado peça possivel para vitoria
       continue;
     }
 
     if (currentPosition == countedSymbol.symbol) {
+      countedSymbol.coordinates[countedSymbol.cont][0] = currentRow;
+      countedSymbol.coordinates[countedSymbol.cont][1] = i;
       countedSymbol.cont++;
-      // printf("foram encontrados %d, %c\n", countedSymbol.cont, countedSymbol.symbol);
+      
     } else if (countedSymbol.cont < 4) { // Garante consecutividade das peças
       countedSymbol.symbol = currentPosition;
-      // printf("foi encontrado uma quebra na consecutividade, agora o simbolo considerado é '%c'\n", countedSymbol.symbol);
       countedSymbol.cont = 1; // inicia com 1 pois já considera o atual que ocasionou a troca
+      countedSymbol.coordinates[0][0] = currentRow;
+      countedSymbol.coordinates[0][1] = i;
     }
   }
 
   if (countedSymbol.cont >= 4) {
+    coloringWinPieces(c, r, table, countedSymbol.cont, countedSymbol.coordinates);
+    printf("Cordenadas da vitoria:\n");
+    for (int k = 0; k < countedSymbol.cont; k ++ ) {
+      printf("(%d, %d)\n", countedSymbol.coordinates[k][0], countedSymbol.coordinates[k][1]);
+    }
     return countedSymbol.symbol;
   }
 

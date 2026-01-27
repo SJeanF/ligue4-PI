@@ -209,7 +209,7 @@ void playGame(Game *game) {
       initializeGame(game);
       selectGameMode(game);
 
-      while (playRound(game) != 1) {  //pra que serve esse while com nenhum codigo?
+      while (playRound(game) != 1) { 
       }
 
       printf("\nVocê deseja continuar jogando? \n");
