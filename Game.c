@@ -92,24 +92,6 @@ void selectGameMode(Game *game) {
   }
 }
 
-void botPlayMessage(char* botName, int pieceType, int col) {
-  printf("%s jogou uma ficha ", botName);
-  switch (pieceType) {
-  case 0:
-    printf("basica ");
-    break;
-  case 1:
-    printf("portal ");
-    break;
-  case 2:
-    printf("explosiva ");
-    break;
-  default:
-    break;
-  }
-  printf("na coluna %d\n", col + 1);
-}
-
 int playRound(Game *game) {
   game->roundCount++;
   printf("\n\n-----Round %d começou-----\n", game->roundCount);

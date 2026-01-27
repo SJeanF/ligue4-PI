@@ -51,3 +51,22 @@ void fillTable(int colNum, int rowNum, Position table[rowNum][colNum]) {
     }
   }
 }
+
+void botPlayMessage(char* botName, int pieceType, int col) {
+  printf("%s jogou uma ficha ", botName);
+  switch (pieceType) {
+  case 0:
+    printf("basica ");
+    break;
+  case 1:
+    printf("portal ");
+    break;
+  case 2:
+    printf("explosiva ");
+    break;
+  default:
+    break;
+  }
+  printf("na coluna %d\n", col + 1);
+}
+

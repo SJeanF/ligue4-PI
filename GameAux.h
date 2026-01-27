@@ -9,5 +9,7 @@ int addPiece(int c, int r, Position table[r][c], int chosenCol, Player player, i
 
 void fillTable(int colNum, int rowNum, Position table[rowNum][colNum]);
 
+void botPlayMessage(char* botName, int pieceType, int col);
+
 
 #endif
