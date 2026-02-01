@@ -7,19 +7,20 @@
 #define RESET "\033[0m"
 
 void showTable(int c, int r, Position table[r][c]) {
+  printf("      1  2  3  4  5  6  7\n");
+  printf("      |  |  |  |  |  |  |\n");
   for (int i = 0; i < r; i++) {
+    printf("%d -- ", i + 1);
     for (int j = 0; j < c; j++) {
         Position pos = table[i][j];
         char color[50] = "\033[0m";
 
         if (pos.pieceType == 1) strcpy(color, "\033[0;34m");
         else if (pos.pieceType == 2) strcpy(color, "\033[0;31m");
-        if (pos.isWin){
+        if (pos.winPiece){
 
           strcpy(color, "\033[0;32m");
         } 
-
-
       printf("%s %c "RESET, color, pos.symbol);
     }
     printf("\n");
@@ -53,7 +54,7 @@ void fillTable(int colNum, int rowNum, Position table[rowNum][colNum]) {
     for (int j = 0; j < colNum; j++) {
       table[i][j].symbol = '.';
       table[i][j].pieceType = -1;
-      table[i][j].isWin = 0;
+      table[i][j].winPiece = 0;
     }
   }
 }
@@ -76,11 +77,11 @@ void botPlayMessage(char* botName, int pieceType, int col) {
   printf("na coluna %d\n", col + 1);
 }
 
-void coloringWinPieces(int colNum, int rowNum, Position table[rowNum][colNum], int winPiecesCount, int piecesCoord[7][2]) {
+void coloringWinPieces(int colNum, int rowNum, Position table[rowNum][colNum], int winPiecesCount, SymbolCoordinates piecesCoord[7]) {
   for (int i = 0; i < winPiecesCount; i++) {
-    int rowCoord = piecesCoord[i][0];
-    int colCoord = piecesCoord[i][1];
+    int rowCoord = piecesCoord[i].x;
+    int colCoord = piecesCoord[i].y;
 
-    table[rowCoord][colCoord].isWin = 1;
+    table[rowCoord][colCoord].winPiece = 1;
   }
 }

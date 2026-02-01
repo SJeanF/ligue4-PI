@@ -170,9 +170,8 @@ int playRound(Game *game) {
         printf("\nEscolha a coluna: ");
         scanf("%d", &col); 
 
-        if (col > 0 && col < 8) {
-          break;
-        } else {
+        if (col > 0 && col < 8) break;
+        else {
           printf("Coluna invalida, por favor selecionar uma coluna entre 1 e 7\n");
         }
       }
@@ -181,7 +180,7 @@ int playRound(Game *game) {
 
     int row = addPiece(7, 6, game->table, col, game->players[i], pieceType); // falta fazer o jogador jogar denovo se a coluna estiver cheia
     char result = verifyLocalWin(7, 6, game->table, row, col);
-
+    
     if (result != '\0') {
       showTable(7, 6, game->table);
       printf("%s venceu!\n", game->players[i].name);

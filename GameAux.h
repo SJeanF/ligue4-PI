@@ -11,6 +11,6 @@ void fillTable(int colNum, int rowNum, Position table[rowNum][colNum]);
 
 void botPlayMessage(char* botName, int pieceType, int col);
 
-void coloringWinPieces(int colNum, int rowNum, Position table[rowNum][colNum], int winPiecesCount, int piecesCoord[7][2]) ;
+void coloringWinPieces(int colNum, int rowNum, Position table[rowNum][colNum], int winPiecesCount, SymbolCoordinates piecesCoord[7]) ;
 
 #endif

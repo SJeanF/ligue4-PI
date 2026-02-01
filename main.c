@@ -2,6 +2,7 @@
 #include "VerifyWin.h"
 #include "GameAux.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 

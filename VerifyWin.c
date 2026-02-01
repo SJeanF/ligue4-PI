@@ -4,126 +4,140 @@
 #include "VerifyWin.h"
 
 char horizontalWinVerify(int c, int r, Position table[r][c], int currentRow) {
-  SymbolCont countedSymbol = {table[currentRow][0].symbol, 0, {{}}};
+  SymbolCont countedSymbol = {table[currentRow][0].symbol, 0, {}};
 
   for (int i = 0; i < c; i++) {
-    char currentPosition = table[currentRow][i].symbol;
+    char currentSymbol = table[currentRow][i].symbol;
+    SymbolCoordinates currentCoordinates = {currentRow, i};
 
-    
-    if (currentPosition == '.' && countedSymbol.cont < 4) {
+    if (currentSymbol == '.') { // Garante que '.' não seja considerado peça possivel para vitoria
       countedSymbol.cont = 0;
-      continue;
-    }
-    if (currentPosition == '.') { // Garante que '.' não seja considerado peça possivel para vitoria
+      countedSymbol.symbol = '\0';
       continue;
     }
 
-    if (currentPosition == countedSymbol.symbol) {
-      countedSymbol.coordinates[countedSymbol.cont][0] = currentRow;
-      countedSymbol.coordinates[countedSymbol.cont][1] = i;
+    if (currentSymbol == countedSymbol.symbol) {
+      countedSymbol.coordinates[countedSymbol.cont] = currentCoordinates;
       countedSymbol.cont++;
-      
     } else if (countedSymbol.cont < 4) { // Garante consecutividade das peças
-      countedSymbol.symbol = currentPosition;
+      countedSymbol.symbol = currentSymbol;
       countedSymbol.cont = 1; // inicia com 1 pois já considera o atual que ocasionou a troca
-      countedSymbol.coordinates[0][0] = currentRow;
-      countedSymbol.coordinates[0][1] = i;
+      countedSymbol.coordinates[0] = currentCoordinates;
     }
-  }
-
-  if (countedSymbol.cont >= 4) {
-    coloringWinPieces(c, r, table, countedSymbol.cont, countedSymbol.coordinates);
-    printf("Cordenadas da vitoria:\n");
-    for (int k = 0; k < countedSymbol.cont; k ++ ) {
-      printf("(%d, %d)\n", countedSymbol.coordinates[k][0], countedSymbol.coordinates[k][1]);
+    if (countedSymbol.cont >= 4) {
+      coloringWinPieces(c, r, table, countedSymbol.cont, countedSymbol.coordinates);
+      printf("Cordenadas da vitoria:\n");
+      for (int k = 0; k < countedSymbol.cont; k ++ ) {                                                   // só pra debug
+        printf("(%d, %d)\n", countedSymbol.coordinates[k].x, countedSymbol.coordinates[k].y);
+      }
+      return countedSymbol.symbol;
     }
-    return countedSymbol.symbol;
   }
 
   return '\0';
 }
 
 char verticalWinVerify(int c, int r, Position table[r][c], int currentCol) {
-  SymbolCont countedSymbol = {table[0][currentCol].symbol, 0};
+  SymbolCont countedSymbol = {table[0][currentCol].symbol, 0, {}};
 
-  for (int j = 0; j < r; j++) {
-    char currentPosition = table[j][currentCol].symbol;
-    if (currentPosition == '.') {
+  for (int i = 0; i < r; i++) {
+    char currentSymbol = table[i][currentCol].symbol;
+    SymbolCoordinates currentCoordinates = {i, currentCol};
+
+    if (currentSymbol == '.') {
       countedSymbol.cont = 0;
+      countedSymbol.symbol = '\0';
       continue;
     }
-    if (table[j][currentCol].symbol == countedSymbol.symbol) {
+
+    if (currentSymbol == countedSymbol.symbol) {
+      countedSymbol.coordinates[countedSymbol.cont] = currentCoordinates;
       countedSymbol.cont++;
     } else if (countedSymbol.cont < 4) {
-      countedSymbol.symbol = currentPosition;
+      countedSymbol.symbol = currentSymbol;
+      countedSymbol.coordinates[0] = currentCoordinates;    
       countedSymbol.cont = 1;
     }
+    if (countedSymbol.cont >= 4) {
+      coloringWinPieces(c, r, table, countedSymbol.cont, countedSymbol.coordinates);
+      printf("Cordenadas da vitoria:\n");
+      for (int k = 0; k < countedSymbol.cont; k ++ ) {                                                   // só pra debug
+        printf("(%d, %d)\n", countedSymbol.coordinates[k].x, countedSymbol.coordinates[k].y);
+      }
+      return countedSymbol.symbol;
+    }
   }
-
-  if (countedSymbol.cont >= 4) {
-    return countedSymbol.symbol;
-  }
-
   return '\0';
 }
 
-char mainDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow,
-                          int currentCol) {
-  SymbolCont countedSymbol = {table[currentRow][currentCol].symbol, 1}; // inicia com um pois a propria posição adicionada já conta como
-                // criterio de vitoria
+char mainDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow, int currentCol) {
+  SymbolCoordinates firstCoordinate = {currentRow, currentCol}; 
+  SymbolCont countedSymbol = {table[currentRow][currentCol].symbol, 1, {firstCoordinate}}; // inicia com um pois a propria posição adicionada já conta como criterio de vitoria
+
   // verificação sentido NW
   for (int i = currentRow - 1, j = currentCol - 1; i >= 0 && j >= 0; i--, j--) {
+    char currentSymbol = table[i][j].symbol;
+    SymbolCoordinates currentCoordinates = {i, j};
 
     if (table[i][j].symbol == countedSymbol.symbol) {
+      countedSymbol.coordinates[countedSymbol.cont] = currentCoordinates;
       countedSymbol.cont++;
-    } else {
-      break;
-    }
+    } else break;
   }
 
   // verificação sentido SE
   for (int i = currentRow + 1, j = currentCol + 1; i < r && j < c; i++, j++) {
+    char currentSymbol = table[i][j].symbol;
+    SymbolCoordinates currentCoordinates = {i, j};
 
     if (table[i][j].symbol == countedSymbol.symbol) {
+      countedSymbol.coordinates[countedSymbol.cont] = currentCoordinates;
       countedSymbol.cont++;
-    } else {
-      break;
-    }
+    } else break;
   }
 
   if (countedSymbol.cont >= 4) {
+    coloringWinPieces(c, r, table, countedSymbol.cont, countedSymbol.coordinates);
+    printf("Cordenadas da vitoria:\n");
+    for (int k = 0; k < countedSymbol.cont; k ++ ) {                                                   // só pra debug
+      printf("(%d, %d)\n", countedSymbol.coordinates[k].x, countedSymbol.coordinates[k].y);
+    }
     return countedSymbol.symbol;
   }
 
   return '\0';
 }
 
-char antiDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow,
-                          int currentCol) {
-  SymbolCont countedSymbol = {table[currentRow][currentCol].symbol, 1}; // inicia com um pois a propria posição adicionada já conta como
-                // criterio de vitoria
+char antiDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow, int currentCol) {
+  SymbolCoordinates firstCoordinate = {currentRow, currentCol};
+  SymbolCont countedSymbol = {table[currentRow][currentCol].symbol, 1, {firstCoordinate}}; // inicia com um pois a propria posição adicionada já conta como criterio de vitoria
 
   // verificação sentido NE
   for (int i = currentRow - 1, j = currentCol + 1; i >= 0 && j < c; i--, j++) {
+    SymbolCoordinates currentCoordinates = {i, j};
 
     if (table[i][j].symbol == countedSymbol.symbol) {
+      countedSymbol.coordinates[countedSymbol.cont] = currentCoordinates;
       countedSymbol.cont++;
-    } else {
-      break;
-    }
+    } else break;
   }
 
   // verificação sentido SW
   for (int i = currentRow + 1, j = currentCol - 1; i < r && j >= 0; i++, j--) {
+    SymbolCoordinates currentCoordinates = {i, j};
 
     if (table[i][j].symbol == countedSymbol.symbol) {
+      countedSymbol.coordinates[countedSymbol.cont] = currentCoordinates;
       countedSymbol.cont++;
-    } else {
-      break;
-    }
+    } else break;
   }
 
   if (countedSymbol.cont >= 4) {
+    coloringWinPieces(c, r, table, countedSymbol.cont, countedSymbol.coordinates);
+    printf("Cordenadas da vitoria:\n");
+    for (int k = 0; k < countedSymbol.cont; k ++ ) {                                                   // só pra debug
+      printf("(%d, %d)\n", countedSymbol.coordinates[k].x, countedSymbol.coordinates[k].y);
+    }
     return countedSymbol.symbol;
   }
 

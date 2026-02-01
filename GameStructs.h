@@ -4,7 +4,7 @@
 typedef struct {
   char symbol;
   int pieceType;
-  int isWin;
+  int winPiece;
 } Position;
 
 typedef struct {
@@ -17,9 +17,14 @@ typedef struct {
 } Player;
 
 typedef struct {
+  int x;
+  int y;
+} SymbolCoordinates;
+
+typedef struct {
   char symbol;
   int cont;
-  int coordinates[7][2]
+  SymbolCoordinates coordinates[7];
 } SymbolCont;
 
 #endif // GAMESTRUCTS_H
