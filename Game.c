@@ -180,7 +180,7 @@ int playRound(Game *game) {
 
     int row = addPiece(7, 6, game->table, col, game->players[i], pieceType); // falta fazer o jogador jogar denovo se a coluna estiver cheia
     char result = verifyLocalWin(7, 6, game->table, row, col);
-    
+
     if (result != '\0') {
       showTable(7, 6, game->table);
       printf("%s venceu!\n", game->players[i].name);
@@ -217,10 +217,21 @@ void playGame(Game *game) {
       printf("Escolha: ");
       scanf("%d", &choice);
     }
-
-    if (choice == 2) {
+    else if (choice == 2) {
       printf("\nObrigado por jogar!\n");
       return;
     }
+    else {
+      while (!(choice == 1 || choice == 2)) {
+        printf("Opção invalida, por favor, digite uma das opções listadas\n");
+        printf("\nVocê deseja continuar jogando? \n");
+        printf("[1] Sim\n");
+        printf("[2] Não\n");
+        printf("Escolha: ");
+        scanf("%d", &choice);
+      }
+    }
+
+
   }
 }

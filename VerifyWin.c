@@ -26,10 +26,6 @@ char horizontalWinVerify(int c, int r, Position table[r][c], int currentRow) {
     }
     if (countedSymbol.cont >= 4) {
       coloringWinPieces(c, r, table, countedSymbol.cont, countedSymbol.coordinates);
-      printf("Cordenadas da vitoria:\n");
-      for (int k = 0; k < countedSymbol.cont; k ++ ) {                                                   // só pra debug
-        printf("(%d, %d)\n", countedSymbol.coordinates[k].x, countedSymbol.coordinates[k].y);
-      }
       return countedSymbol.symbol;
     }
   }
@@ -60,10 +56,6 @@ char verticalWinVerify(int c, int r, Position table[r][c], int currentCol) {
     }
     if (countedSymbol.cont >= 4) {
       coloringWinPieces(c, r, table, countedSymbol.cont, countedSymbol.coordinates);
-      printf("Cordenadas da vitoria:\n");
-      for (int k = 0; k < countedSymbol.cont; k ++ ) {                                                   // só pra debug
-        printf("(%d, %d)\n", countedSymbol.coordinates[k].x, countedSymbol.coordinates[k].y);
-      }
       return countedSymbol.symbol;
     }
   }
@@ -98,10 +90,6 @@ char mainDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow, i
 
   if (countedSymbol.cont >= 4) {
     coloringWinPieces(c, r, table, countedSymbol.cont, countedSymbol.coordinates);
-    printf("Cordenadas da vitoria:\n");
-    for (int k = 0; k < countedSymbol.cont; k ++ ) {                                                   // só pra debug
-      printf("(%d, %d)\n", countedSymbol.coordinates[k].x, countedSymbol.coordinates[k].y);
-    }
     return countedSymbol.symbol;
   }
 
@@ -134,10 +122,6 @@ char antiDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow, i
 
   if (countedSymbol.cont >= 4) {
     coloringWinPieces(c, r, table, countedSymbol.cont, countedSymbol.coordinates);
-    printf("Cordenadas da vitoria:\n");
-    for (int k = 0; k < countedSymbol.cont; k ++ ) {                                                   // só pra debug
-      printf("(%d, %d)\n", countedSymbol.coordinates[k].x, countedSymbol.coordinates[k].y);
-    }
     return countedSymbol.symbol;
   }
 

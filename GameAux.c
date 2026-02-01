@@ -7,10 +7,9 @@
 #define RESET "\033[0m"
 
 void showTable(int c, int r, Position table[r][c]) {
-  printf("      1  2  3  4  5  6  7\n");
-  printf("      |  |  |  |  |  |  |\n");
+  printf(" 1  2  3  4  5  6  7\n");
+  printf(" |  |  |  |  |  |  |\n");
   for (int i = 0; i < r; i++) {
-    printf("%d -- ", i + 1);
     for (int j = 0; j < c; j++) {
         Position pos = table[i][j];
         char color[50] = "\033[0m";
@@ -74,7 +73,7 @@ void botPlayMessage(char* botName, int pieceType, int col) {
   default:
     break;
   }
-  printf("na coluna %d\n", col + 1);
+  printf("na coluna %d\n\n", col + 1);
 }
 
 void coloringWinPieces(int colNum, int rowNum, Position table[rowNum][colNum], int winPiecesCount, SymbolCoordinates piecesCoord[7]) {
