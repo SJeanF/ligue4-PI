@@ -76,7 +76,7 @@ void printRanking() {
   FILE *file = fopen("ranking.txt", "r");
 
   if (file == NULL) {
-    printf("O Hall dos campeões ainda não existe, é preciso que alguém jogue o jogo para começar");
+    printf("O Hall dos campeões ainda não existe, é preciso que alguém jogue o jogo para começar.\n");
     return;
   }
 

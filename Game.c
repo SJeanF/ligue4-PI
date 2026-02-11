@@ -2,6 +2,7 @@
 #include "GameAux.h"
 #include "Ranking.h"
 #include "VerifyWin.h"
+#include "Bot.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
