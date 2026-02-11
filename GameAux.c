@@ -1,3 +1,4 @@
+#include "Game.h"
 #include "GameStructs.h"
 #include "VerifyWin.h"
 #include "GameAux.h"
@@ -30,7 +31,8 @@ void showTable(int c, int r, Position table[r][c]) {
 int addPiece(int c, int r, Position table[r][c], int chosenCol, Player player, int pieceType) {
   // caso não tenha como colocar peça
   if (table[0][chosenCol].symbol != '.') {
-    return printf("posição invalida, essa coluna está completa\n");
+    printf("posição invalida, essa coluna está completa\n");
+    return -1;
   }
 
   // Lógica de queda da peça
@@ -83,4 +85,38 @@ void coloringWinPieces(int colNum, int rowNum, Position table[rowNum][colNum], i
 
     table[rowCoord][colCoord].winPiece = 1;
   }
+}
+
+BotChoice botPlay(Game *game, int botId) {
+  // Escolha do tipo da ficha
+  int pieceType = -1;
+
+  // Condicionais de disponibilidade
+  int basicAvailable = game->players[botId].baseCount > 0;
+  int portalAvailable = game->players[botId].portalCount > 0;
+  int explosiveAvailable = game->players[botId].explosiveCount > 0;
+
+  int availableOptions[3];
+  int optionsCont = 0;
+
+  // Logica da ecolha de peça do bot
+  if (basicAvailable) {
+    availableOptions[optionsCont] = 0;
+    optionsCont++;
+  }
+  if (portalAvailable ) {
+    availableOptions[optionsCont] = 1;
+    optionsCont++;
+  }
+  if (explosiveAvailable) {
+    availableOptions[optionsCont] = 2;
+    optionsCont++;
+  }
+  pieceType = availableOptions[rand() % optionsCont];
+  int chosenCol = rand() % 7;
+  
+  botPlayMessage(game->players[botId].name, pieceType, chosenCol);
+  
+  BotChoice choice = {pieceType, chosenCol};
+  return choice;
 }

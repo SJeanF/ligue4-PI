@@ -123,25 +123,10 @@ int playRound(Game *game) {
     int explosiveAvailable = game->players[i].explosiveCount > 0;
 
     if (game->players[i].isBot) {
+      BotChoice choice = botPlay(game, i);
 
-      int availableOptions[3];
-      int optionsCont = 0;
-
-      // Logica da ecolha de peça do bot
-      if (basicAvailable) {
-        availableOptions[optionsCont] = 0;
-        optionsCont++;
-      }
-      if (portalAvailable ) {
-        availableOptions[optionsCont] = 1;
-        optionsCont++;
-      }
-      if (explosiveAvailable) {
-        availableOptions[optionsCont] = 2;
-        optionsCont++;
-      }
-      pieceType = availableOptions[rand() % optionsCont];
-      col = rand() % 7;
+      pieceType = choice.pieceType;
+      col = choice.chosenCol; 
 
       botPlayMessage(game->players[i].name, pieceType, col);
     } else {
@@ -174,6 +159,7 @@ int playRound(Game *game) {
         if (col > 0 && col < 8) break;
         else {
           printf("Coluna invalida, por favor selecionar uma coluna entre 1 e 7\n");
+          if (game->players[i].isBot) {}
         }
       }
       col--; // 0 passa a ser a primeira coluna
@@ -200,6 +186,7 @@ void playGame(Game *game) {
   printf("\nSeja bem-vindo ao Ligue 4! blábláblá.\n\n");
   printf("[1] Jogar\n");
   printf("[2] Sair\n");
+  printf("[3] Hall dos campeões\n");
   printf("Escolha: ");
   scanf("%d", &choice);
 
@@ -222,17 +209,20 @@ void playGame(Game *game) {
       printf("\nObrigado por jogar!\n");
       return;
     }
+    else if (choice == 3) {
+      printRanking();
+      return;
+    }
     else {
-      while (!(choice == 1 || choice == 2)) {
+      while (!(choice == 1 || choice == 2 || choice == 3)) {
         printf("Opção invalida, por favor, digite uma das opções listadas\n");
         printf("\nVocê deseja continuar jogando? \n");
         printf("[1] Sim\n");
         printf("[2] Não\n");
+        printf("[3] Hall dos campeões");
         printf("Escolha: ");
         scanf("%d", &choice);
       }
     }
-
-
   }
 }

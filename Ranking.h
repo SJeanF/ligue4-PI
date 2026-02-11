@@ -8,4 +8,6 @@ typedef struct {
 
 void addRounds(char name[], int rounds);
 
+void printRanking();
+
 #endif

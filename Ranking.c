@@ -71,3 +71,43 @@ void addRounds(char name[], int rounds) {
 
   fclose(file);
 }
+
+void printRanking() {
+  FILE *file = fopen("ranking.txt", "r");
+
+  if (file == NULL) {
+    printf("O Hall dos campeões ainda não existe, é preciso que alguém jogue o jogo para começar");
+    return;
+  }
+
+  char rows[100];
+  RankingEntry players[3];
+  int i = 0;
+
+
+  while (fgets(rows, sizeof(rows), file) != NULL) {
+
+    rows[strcspn(rows, "\n")] = 0;
+
+    // Pega o nome
+    char *token = strtok(rows, ",");
+
+    if (token != NULL) {
+      strcpy(players[i].name, token);
+
+      // Pega a pontuação
+      token = strtok(NULL, ",");
+      players[i].rounds = atoi(token);
+
+      i++;
+    }
+  }
+
+  printf("\n------HALL DOS CAMPEÕES------\n\n");
+  for (int i = 0; i < 3; i++) {
+    printf("Jogador: %s, Rounds: %d\n", players[i].name, players[i].rounds);
+  }
+  printf("\n-----------------------------\n");
+
+  fclose(file);
+}
