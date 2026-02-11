@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "GameAux.h"
+#include "Ranking.h"
 #include "VerifyWin.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,7 +55,7 @@ void selectGameMode(Game *game) {
     printf("[2] - Dois Jogador\n");
     printf("Escolha: ");
     scanf("%d", &gameMode);
-    
+
     if (gameMode < 0 || gameMode > 2) {
       printf("Opção não disponivel, por favor selecionar modo de jogo listado\n");
       gameMode = -1;
@@ -71,14 +72,14 @@ void selectGameMode(Game *game) {
     game->players[1].isBot = 1;
   } else if (gameMode == 1) {
     setPlayer(game->players, 0);
-    
+
     // garantir que o bot não vai ter o mesmo nome/simbolo que o jogador
     if (strcmp(game->players[0].name, "Bot - 1") == 0) {
       strcpy(game->players[1].name, "Bot - 2");
     } else {
       strcpy(game->players[1].name, "Bot - 1");
     }
-    
+
     if (game->players[0].symbol == '@') {
       game-> players[1].symbol = '#';
     } else {
@@ -86,7 +87,7 @@ void selectGameMode(Game *game) {
     }
     game->players[1].isBot = 1;
   } else if (gameMode == 2) {
-    for (int i = 0; i < 2; i++) { 
+    for (int i = 0; i < 2; i++) {
       setPlayer(game->players, i);
     }
   }
@@ -122,7 +123,7 @@ int playRound(Game *game) {
     int explosiveAvailable = game->players[i].explosiveCount > 0;
 
     if (game->players[i].isBot) {
-      
+
       int availableOptions[3];
       int optionsCont = 0;
 
@@ -140,8 +141,8 @@ int playRound(Game *game) {
         optionsCont++;
       }
       pieceType = availableOptions[rand() % optionsCont];
-      col = rand() % 7; 
-      
+      col = rand() % 7;
+
       botPlayMessage(game->players[i].name, pieceType, col);
     } else {
       printf("Fichas disponíveis:\n");
@@ -151,7 +152,7 @@ int playRound(Game *game) {
       while (pieceType == -1) {
         printf("Escolha: ");
         scanf("%d", &pieceType);
-  
+
         // Diminuição da quantidade de peças
         if (pieceType == 0 && basicAvailable)
           game->players[i].baseCount--;
@@ -164,11 +165,11 @@ int playRound(Game *game) {
           pieceType = -1;
         }
       }
-      
+
       // Validação da coluna escolhida
       while (1) {
         printf("\nEscolha a coluna: ");
-        scanf("%d", &col); 
+        scanf("%d", &col);
 
         if (col > 0 && col < 8) break;
         else {
@@ -184,8 +185,8 @@ int playRound(Game *game) {
     if (result != '\0') {
       showTable(7, 6, game->table);
       printf("%s venceu!\n", game->players[i].name);
+      addRounds(game->players[i].name, game->roundCount);
       return 1;
-      break;
     }
   }
 
@@ -208,7 +209,7 @@ void playGame(Game *game) {
       initializeGame(game);
       selectGameMode(game);
 
-      while (playRound(game) != 1) { 
+      while (playRound(game) != 1) {
       }
 
       printf("\nVocê deseja continuar jogando? \n");
