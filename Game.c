@@ -99,7 +99,7 @@ int playRound(Game *game) {
   printf("\n\n-----Round %d começou-----\n", game->roundCount);
 
   // Ganho de peças por rodada
-  if (game->roundCount % 10 == 0) {
+  if (game->roundCount % 5 == 0) {
     printf("\nOs jogadores ganharam duas peças especiais!\n");
 
     for (int i = 0; i < 2; i++) {
