@@ -10,6 +10,8 @@ int addPiece(int c, int r, Position table[r][c], int chosenCol, Player player, i
 
 void fillTable(int colNum, int rowNum, Position table[rowNum][colNum]);
 
+void emptyPosition(int colNum, int rowNum, Position table[rowNum][colNum], int i, int j);
+
 void coloringWinPieces(int colNum, int rowNum, Position table[rowNum][colNum], int winPiecesCount, SymbolCoordinates piecesCoord[7]);
 
 #endif

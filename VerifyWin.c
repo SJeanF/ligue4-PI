@@ -51,7 +51,7 @@ char verticalWinVerify(int c, int r, Position table[r][c], int currentCol) {
       countedSymbol.cont++;
     } else if (countedSymbol.cont < 4) {
       countedSymbol.symbol = currentSymbol;
-      countedSymbol.coordinates[0] = currentCoordinates;    
+      countedSymbol.coordinates[0] = currentCoordinates;
       countedSymbol.cont = 1;
     }
     if (countedSymbol.cont >= 4) {
@@ -63,7 +63,7 @@ char verticalWinVerify(int c, int r, Position table[r][c], int currentCol) {
 }
 
 char mainDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow, int currentCol) {
-  SymbolCoordinates firstCoordinate = {currentRow, currentCol}; 
+  SymbolCoordinates firstCoordinate = {currentRow, currentCol};
   SymbolCont countedSymbol = {table[currentRow][currentCol].symbol, 1, {firstCoordinate}}; // inicia com um pois a propria posição adicionada já conta como criterio de vitoria
 
   // verificação sentido NW
@@ -153,6 +153,10 @@ void globalWinVerify(int c, int r, Position table[r][c]) {
 
 char verifyLocalWin(int c, int r, Position table[r][c], int currentRow,
               int currentCol) {
+    // se a posição passada for 'vazia'
+    if (table[currentRow][currentCol].pieceType == -1)
+        return '\0';
+
     char result = horizontalWinVerify(c, r, table, currentRow);
     if (result != '\0')
         return result;

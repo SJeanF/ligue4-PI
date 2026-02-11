@@ -1,6 +1,7 @@
 #include "GameAux.h"
 #include "VerifyWin.h"
 #include "Bot.h"
+#include "Special.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -42,6 +43,11 @@ int addPiece(int c, int r, Position table[r][c], int chosenCol, Player player, i
     if (reachEndOfTable) {
       table[i][chosenCol].symbol = player.symbol;
       table[i][chosenCol].pieceType = pieceType;
+
+      // Se a peça debaixo for uma mina, explodir-lá
+      if (i + 1 < c && table[i + 1][chosenCol].pieceType == 2)
+        applyExplosion(c, r, table, i + 1, chosenCol);
+
       return i; // retorna a linha onde foi adicionada a peça
     }
   }
@@ -52,11 +58,15 @@ int addPiece(int c, int r, Position table[r][c], int chosenCol, Player player, i
 void fillTable(int colNum, int rowNum, Position table[rowNum][colNum]) {
   for (int i = 0; i < rowNum; i++) {
     for (int j = 0; j < colNum; j++) {
-      table[i][j].symbol = '.';
-      table[i][j].pieceType = -1;
-      table[i][j].winPiece = 0;
+        emptyPosition(colNum, rowNum, table, i, j);
     }
   }
+}
+
+void emptyPosition(int colNum, int rowNum, Position table[rowNum][colNum], int i, int j) {
+    table[i][j].symbol = '.';
+    table[i][j].pieceType = -1;
+    table[i][j].winPiece = 0;
 }
 
 void coloringWinPieces(int colNum, int rowNum, Position table[rowNum][colNum], int winPiecesCount, SymbolCoordinates piecesCoord[7]) {
