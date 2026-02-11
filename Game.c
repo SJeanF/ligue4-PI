@@ -123,28 +123,10 @@ int playRound(Game *game) {
     int explosiveAvailable = game->players[i].explosiveCount > 0;
 
     if (game->players[i].isBot) {
-
-      // int availableOptions[3];
-      // int optionsCont = 0;
-
-      // // Logica da ecolha de peça do bot
-      // if (basicAvailable) {
-      //   availableOptions[optionsCont] = 0;
-      //   optionsCont++;
-      // }
-      // if (portalAvailable ) {
-      //   availableOptions[optionsCont] = 1;
-      //   optionsCont++;
-      // }
-      // if (explosiveAvailable) {
-      //   availableOptions[optionsCont] = 2;
-      //   optionsCont++;
-      // }
-      // pieceType = availableOptions[rand() % optionsCont];
       BotChoice choice = botPlay(game, i);
 
       pieceType = choice.pieceType;
-      col = choice.chosenCol; 
+      col = choice.chosenCol;
 
       botPlayMessage(game->players[i].name, pieceType, col);
     } else {
