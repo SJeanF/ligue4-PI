@@ -36,10 +36,20 @@ int addPiece(int c, int r, Position table[r][c], int chosenCol, Player player, i
 
   // Lógica de queda da peça
   for (int i = 0; i < r; i++) {
-    int reachEndOfTable = table[i + 1][chosenCol].symbol != '.' || i + 1 >= r;
+    int nextRow = i + 1;
+    int nextRowAvailable = table[nextRow][chosenCol].symbol == '.';
+    int reachEndOfTable = nextRow >= r;
 
     // Adição da peça
-    if (reachEndOfTable) {
+    if (reachEndOfTable || !nextRowAvailable) {
+
+      //lógica da ficha portal
+      if (pieceType == 1 && !reachEndOfTable) {
+        table[nextRow][chosenCol].symbol = player.symbol;
+        table[nextRow][chosenCol].pieceType = pieceType;
+        return nextRow;
+      }
+      
       table[i][chosenCol].symbol = player.symbol;
       table[i][chosenCol].pieceType = pieceType;
       return i; // retorna a linha onde foi adicionada a peça

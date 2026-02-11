@@ -99,7 +99,7 @@ int playRound(Game *game) {
   printf("\n\n-----Round %d começou-----\n", game->roundCount);
 
   // Ganho de peças por rodada
-  if (game->roundCount % 5 == 0) {
+  if (game->roundCount % 1 == 0) {
     printf("\nOs jogadores ganharam duas peças especiais!\n");
 
     for (int i = 0; i < 2; i++) {
@@ -128,8 +128,6 @@ int playRound(Game *game) {
 
       pieceType = choice.pieceType;
       col = choice.chosenCol;
-
-      botPlayMessage(game->players[i].name, pieceType, col);
     } else {
       printf("Fichas disponíveis:\n");
       printf("[0] Básicas: %d\n", game->players[i].baseCount);
