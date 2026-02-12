@@ -25,19 +25,19 @@ void addRounds(char name[], int rounds) {
   RankingEntry players[3];
   int i = 0;
 
-  while (fgets(rows, sizeof(rows), file) != NULL) {
+  while (fgets(rows, sizeof(rows), file) != NULL || i < 3) {
 
     rows[strcspn(rows, "\n")] = 0;
 
     // Pega o nome
-    char *token = strtok(rows, ",");
+    char *nameToken = strtok(rows, ",");
+    char *roundsToken = strtok(NULL, ",");
 
-    if (token != NULL) {
-      strcpy(players[i].name, token);
+    if (nameToken != NULL && roundsToken != NULL) {
+      strcpy(players[i].name, nameToken);
 
       // Pega a pontuação
-      token = strtok(NULL, ",");
-      players[i].rounds = atoi(token);
+      players[i].rounds = atoi(roundsToken);
 
       i++;
     }
@@ -85,7 +85,7 @@ void printRanking() {
   int i = 0;
 
 
-  while (fgets(rows, sizeof(rows), file) != NULL) {
+  while (fgets(rows, sizeof(rows), file) != NULL || i < 3) {
 
     rows[strcspn(rows, "\n")] = 0;
 

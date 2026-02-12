@@ -2,7 +2,7 @@
 #define RANKING_H
 
 typedef struct {
-    char name[50];
+    char name[100];
     int rounds;
 } RankingEntry;
 

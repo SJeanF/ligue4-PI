@@ -53,8 +53,8 @@ int addPiece(int c, int r, Position table[r][c], int chosenCol, Player player, i
       table[i][chosenCol].pieceType = pieceType;
 
       // Se a peça debaixo for uma mina, explodir-lá
-      if (i + 1 < c && table[i + 1][chosenCol].pieceType == 2)
-        applyExplosion(c, r, table, i + 1, chosenCol);
+      if (nextRow < c && table[nextRow][chosenCol].pieceType == 2)
+        applyExplosion(c, r, table, nextRow, chosenCol);
 
       return i; // retorna a linha onde foi adicionada a peça
     }
