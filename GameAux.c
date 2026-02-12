@@ -1,6 +1,7 @@
 #include "GameAux.h"
 #include "VerifyWin.h"
 #include "Bot.h"
+#include "Portal.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -43,11 +44,8 @@ int addPiece(int c, int r, Position table[r][c], int chosenCol, Player player, i
     // Adição da peça
     if (reachEndOfTable || !nextRowAvailable) {
 
-      //lógica da ficha portal
       if (pieceType == 1 && !reachEndOfTable) {
-        table[nextRow][chosenCol].symbol = player.symbol;
-        table[nextRow][chosenCol].pieceType = pieceType;
-        return nextRow;
+        return portalActive(c, r, table, player, chosenCol, nextRow, pieceType);  // a função retorna a linha que foi adicionada a ficha portal
       }
       
       table[i][chosenCol].symbol = player.symbol;
