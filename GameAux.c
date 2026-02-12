@@ -2,6 +2,7 @@
 #include "VerifyWin.h"
 #include "Bot.h"
 #include "Special.h"
+#include "Portal.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -37,10 +38,17 @@ int addPiece(int c, int r, Position table[r][c], int chosenCol, Player player, i
 
   // Lógica de queda da peça
   for (int i = 0; i < r; i++) {
-    int reachEndOfTable = table[i + 1][chosenCol].symbol != '.' || i + 1 >= r;
+    int nextRow = i + 1;
+    int nextRowAvailable = table[nextRow][chosenCol].symbol == '.';
+    int reachEndOfTable = nextRow >= r;
 
     // Adição da peça
-    if (reachEndOfTable) {
+    if (reachEndOfTable || !nextRowAvailable) {
+
+      if (pieceType == 1 && !reachEndOfTable) {
+        return portalActive(c, r, table, player, chosenCol, nextRow, pieceType);  // a função retorna a linha que foi adicionada a ficha portal
+      }
+
       table[i][chosenCol].symbol = player.symbol;
       table[i][chosenCol].pieceType = pieceType;
 
