@@ -1,7 +1,7 @@
 #include "GameAux.h"
 #include "VerifyWin.h"
 #include "Bot.h"
-#include "Special.h"
+#include "Explosive.h"
 #include "Portal.h"
 #include <stdio.h>
 #include <string.h>

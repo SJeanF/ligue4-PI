@@ -1,7 +1,7 @@
 #include "GameStructs.h"
 
-#ifndef SPECIAL_H
-#define SPECIAL_H
+#ifndef EXPLOSIVE_H
+#define EXPLOSIVE_H
 
 void applyGravity(int colNum, int rowNum, Position table[rowNum][colNum]);
 
