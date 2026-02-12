@@ -128,8 +128,6 @@ int playRound(Game *game) {
 
       pieceType = choice.pieceType;
       col = choice.chosenCol;
-
-      botPlayMessage(game->players[i].name, pieceType, col);
     } else {
       printf("Fichas disponíveis:\n");
       printf("[0] Básicas: %d\n", game->players[i].baseCount);
