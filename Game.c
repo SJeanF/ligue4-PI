@@ -13,7 +13,7 @@ void initializeGame(Game *game) {
     game->players[i].symbol = '\0';
     game->players[i].baseCount = 21;
     game->players[i].portalCount = 0;
-    game->players[i].explosiveCount = 10; // QUANTIDADE PARA TESTE
+    game->players[i].explosiveCount = 0;
   }
   game->roundCount = 0;
   fillTable(7, 6, game->table);
