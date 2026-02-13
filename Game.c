@@ -4,6 +4,7 @@
 #include "VerifyWin.h"
 #include "Bot.h"
 #include "Portal.h"
+#include "Explosive.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -167,11 +168,9 @@ int playRound(Game *game) {
 
     int row;
     char result;
-    if (pieceType == 0) {
-      row = addPiece(7, 6, game->table, col, game->players[i], pieceType); // falta fazer o jogador jogar denovo se a coluna estiver cheia
-      result = verifyLocalWin(7, 6, game->table, row, col);
+    int lastIsMine = lastPieceIsMine(7, 6, game->table, col);
 
-    } else if (pieceType == 1) {
+    if (pieceType == 1) {
       int endEmpty = game->table[5][col].symbol == '.';
 
       if (!endEmpty) {
@@ -179,9 +178,15 @@ int playRound(Game *game) {
         row = addPiece(7, 6, game->table, col, game->players[i], pieceType);
         result = verifyLocalWin(7, 6, game->table, row, col);
       } 
-    } else if (pieceType == 2) {
-
+    }  else if (lastIsMine) {
+      row = addPiece(7, 6, game->table, col, game->players[i], pieceType);
+      applyExplosion(7, 6, game->table, row + 1, col);
     }
+    else {
+      row = addPiece(7, 6, game->table, col, game->players[i], pieceType); 
+      result = verifyLocalWin(7, 6, game->table, row, col);
+    } 
+
 
     if (result != '\0') {
       showTable(7, 6, game->table);

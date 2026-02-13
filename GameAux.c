@@ -44,22 +44,11 @@ int addPiece(int c, int r, Position table[r][c], int chosenCol, Player player, i
 
     // Adição da peça
     if (reachEndOfTable || !nextRowAvailable) {
-
-      if (pieceType == 1 && !reachEndOfTable) {
-        return portalActive(c, r, table, player, chosenCol, nextRow, pieceType);  // a função retorna a linha que foi adicionada a ficha portal
-      }
-
       table[i][chosenCol].symbol = player.symbol;
       table[i][chosenCol].pieceType = pieceType;
-
-      // Se a peça debaixo for uma mina, explodir-lá
-      if (nextRow < c && table[nextRow][chosenCol].pieceType == 2)
-        applyExplosion(c, r, table, nextRow, chosenCol);
-
       return i; // retorna a linha onde foi adicionada a peça
     }
   }
-
   return -1;
 }
 

@@ -14,7 +14,8 @@ void removeLast(int c, int r, Position table[r][c], int chosenCol) {
     int nextRowAvailable = table[nextRow][chosenCol].symbol == '.';
 
     if (!nextRowAvailable) {
-      emptyPosition(c, r, table, nextRow, chosenCol)
+      emptyPosition(c, r, table, nextRow, chosenCol);
+      return;
     }
   }
 }

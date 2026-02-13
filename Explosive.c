@@ -38,3 +38,17 @@ void applyExplosion(int colNum, int rowNum, Position table[rowNum][colNum],
     }
   }
 }
+
+int lastPieceIsMine(int colNum, int rowNum, Position table[rowNum][colNum], int chosenCol) {
+  for (int i = 0; i < rowNum; i++) {
+    int nextRow = i + 1;
+    int nextRowAvailable = table[nextRow][chosenCol].symbol == '.';
+    int reachEndOfTable = nextRow >= rowNum;
+
+    // Adição da peça
+    if (!nextRowAvailable && table[nextRow][chosenCol].pieceType == 2) {
+      return 1;
+    }
+  }
+  return 0;
+}
