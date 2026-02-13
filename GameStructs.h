@@ -4,7 +4,6 @@
 typedef struct {
   char symbol;
   int pieceType;
-  int winPiece;
 } Position;
 
 typedef struct {

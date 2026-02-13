@@ -18,8 +18,7 @@ void showTable(int c, int r, Position table[r][c]) {
 
         if (pos.pieceType == 1) strcpy(color, "\033[0;34m");
         else if (pos.pieceType == 2) strcpy(color, "\033[0;31m");
-        if (pos.winPiece){
-
+        else if (pos.pieceType == 3){
           strcpy(color, "\033[0;32m");
         }
       printf("%s %c "RESET, color, pos.symbol);
@@ -63,7 +62,6 @@ void fillTable(int colNum, int rowNum, Position table[rowNum][colNum]) {
 void emptyPosition(int colNum, int rowNum, Position table[rowNum][colNum], int i, int j) {
     table[i][j].symbol = '.';
     table[i][j].pieceType = -1;
-    table[i][j].winPiece = 0;
 }
 
 void coloringWinPieces(int colNum, int rowNum, Position table[rowNum][colNum], int winPiecesCount, SymbolCoordinates piecesCoord[7]) {
@@ -71,6 +69,6 @@ void coloringWinPieces(int colNum, int rowNum, Position table[rowNum][colNum], i
     int rowCoord = piecesCoord[i].x;
     int colCoord = piecesCoord[i].y;
 
-    table[rowCoord][colCoord].winPiece = 1;
+    table[rowCoord][colCoord].pieceType = 3;
   }
 }
