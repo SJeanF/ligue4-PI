@@ -19,8 +19,6 @@ void applyGravity(int colNum, int rowNum, Position table[rowNum][colNum]) {   //
           }
       }
   }
-  //globalWinVerify(colNum, rowNum, table)      essa função vai decidir quem ganhou e retornar
-  // a applyGravity vai retornar o caractere de quem tiver ganhado
 }
 
 void applyExplosion(int colNum, int rowNum, Position table[rowNum][colNum],
@@ -34,7 +32,7 @@ void applyExplosion(int colNum, int rowNum, Position table[rowNum][colNum],
         continue;
 
       emptyPosition(colNum, rowNum, table, i, j);
-      applyGravity(colNum, rowNum, table);   // informação de quem ganhou vai passar por aqui
+      applyGravity(colNum, rowNum, table);  
     }
   }
 }

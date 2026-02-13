@@ -181,17 +181,21 @@ int playRound(Game *game) {
     }  else if (lastIsMine) {
       row = addPiece(7, 6, game->table, col, game->players[i], pieceType);
       applyExplosion(7, 6, game->table, row + 1, col);
+      result = globalWinVerify(7, 6, game->table, game->players[i], game->players);
     }
     else {
       row = addPiece(7, 6, game->table, col, game->players[i], pieceType); 
       result = verifyLocalWin(7, 6, game->table, row, col);
     } 
 
-
     if (result != '\0') {
+      char winnerName[100];
       showTable(7, 6, game->table);
-      printf("%s venceu!\n", game->players[i].name);
-      addRounds(game->players[i].name, game->roundCount);
+      for (int i = 0; i < 2; i++) {
+        if (result == game->players[i].symbol) strcpy(winnerName, game->players[i].name);
+      }
+      printf("%s venceu!\n", winnerName);
+      addRounds(winnerName, game->roundCount);
       return 1;
     }
   }

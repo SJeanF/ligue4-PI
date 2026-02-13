@@ -29,7 +29,6 @@ char horizontalWinVerify(int c, int r, Position table[r][c], int currentRow) {
       return countedSymbol.symbol;
     }
   }
-
   return '\0';
 }
 
@@ -66,6 +65,10 @@ char mainDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow, i
   SymbolCoordinates firstCoordinate = {currentRow, currentCol};
   SymbolCont countedSymbol = {table[currentRow][currentCol].symbol, 1, {firstCoordinate}}; // inicia com um pois a propria posição adicionada já conta como criterio de vitoria
 
+  if (table[currentRow][currentCol].symbol == '.') {
+    return '\0';
+  }
+
   // verificação sentido NW
   for (int i = currentRow - 1, j = currentCol - 1; i >= 0 && j >= 0; i--, j--) {
     char currentSymbol = table[i][j].symbol;
@@ -100,6 +103,10 @@ char antiDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow, i
   SymbolCoordinates firstCoordinate = {currentRow, currentCol};
   SymbolCont countedSymbol = {table[currentRow][currentCol].symbol, 1, {firstCoordinate}}; // inicia com um pois a propria posição adicionada já conta como criterio de vitoria
 
+  if (table[currentRow][currentCol].symbol == '.') {
+    return '\0';
+  }
+
   // verificação sentido NE
   for (int i = currentRow - 1, j = currentCol + 1; i >= 0 && j < c; i--, j++) {
     SymbolCoordinates currentCoordinates = {i, j};
@@ -128,27 +135,55 @@ char antiDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow, i
   return '\0';
 }
 
-void globalWinVerify(int c, int r, Position table[r][c]) {
+char globalWinVerify(int c, int r, Position table[r][c], Player playerRequest, Player players[2]) {
+
+  int p1Win = 0, p2Win = 0;
+  char tempResult;
 
   for (int i = 0; i < r; i++) {
-    horizontalWinVerify(c, r, table, i);
+    tempResult = horizontalWinVerify(c, r, table, i);
+    if (tempResult == players[0].symbol) {
+      p1Win = 1;
+    } else if (tempResult == players[1].symbol) {
+      p2Win = 1;
+    }
   }
 
   for (int j = 0; j < c; j++) {
-    verticalWinVerify(c, r, table, j);
+    tempResult = verticalWinVerify(c, r, table, j);
+    if (tempResult == players[0].symbol) {
+      p1Win = 1;
+    } else if (tempResult == players[1].symbol) {
+      p2Win = 1;
+    }
   }
 
   for (int l = 3; l <= 4; l++) {
     for (int i = l, j = 2; i >= 1 && j <= 4; i--, j++) {
-      mainDiagonalWinVerify(c, r, table, i, j);
+      tempResult = mainDiagonalWinVerify(c, r, table, i, j);
+      if (tempResult == players[0].symbol) {
+        p1Win = 1;
+      } else if (tempResult == players[1].symbol) {
+        p2Win = 1;
+    }
     }
   }
 
   for (int l = 1; l <= 2; l++) {
     for (int i = l, j = 2; i <= 4 && j <= 4; i++, j++) {
-      antiDiagonalWinVerify(c, r, table, i, j);
+      tempResult = antiDiagonalWinVerify(c, r, table, i, j);
+      if (tempResult == players[0].symbol) {
+        p1Win = 1;
+      } else if (tempResult == players[1].symbol) {
+        p2Win = 1;
+      }
     }
   }
+
+  if (p1Win && p2Win) return playerRequest.symbol;
+  else if (p1Win) return players[0].symbol;
+  else if (p2Win) return players[1].symbol;
+  else return '\0';
 }
 
 char verifyLocalWin(int c, int r, Position table[r][c], int currentRow,

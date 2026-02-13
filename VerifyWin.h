@@ -11,7 +11,7 @@ char mainDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow, i
 
 char antiDiagonalWinVerify(int c, int r, Position table[r][c], int currentRow, int currentCol);
 
-void globalWinVerify(int c, int r, Position table[r][c]);
+char globalWinVerify(int c, int r, Position table[r][c], Player playerRequest, Player players[2]);
 
 char verifyLocalWin(int c, int r, Position table[r][c], int currentRow, int currentCol);
 
