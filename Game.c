@@ -101,7 +101,7 @@ int playRound(Game *game) {
   printf("\n\n-----Round %d começou-----\n", game->roundCount);
 
   // Ganho de peças por rodada
-  if (game->roundCount % 1 == 0) {
+  if (game->roundCount % 5 == 0) {
     printf("\nOs jogadores ganharam duas peças especiais!\n");
 
     for (int i = 0; i < 2; i++) {
@@ -111,82 +111,79 @@ int playRound(Game *game) {
   }
 
   for (int i = 0; i < 2; i++) {
-    int col = 0;
+    int col = 0, row = -1, pieceType = -1;
+    char result;
 
-    printf("\nÉ a vez de %s\n", game->players[i].name);
-    printf("Tabela:\n");
-    showTable(7, 6, game->table);
-
-    // Escolha do tipo da ficha
-    int pieceType = -1;
-
-    // Condicionais de disponibilidade
+    // Condicionais de disponibilidade de ficha
     int basicAvailable = game->players[i].baseCount > 0;
     int portalAvailable = game->players[i].portalCount > 0;
     int explosiveAvailable = game->players[i].explosiveCount > 0;
 
-    if (game->players[i].isBot) {
-      BotChoice choice = botPlay(game, i);
+    do {
+      printf("\nÉ a vez de %s\n", game->players[i].name);
+      printf("Tabela:\n");
+      showTable(7, 6, game->table);
+      if (game->players[i].isBot) {
+        BotChoice choice = botPlay(game, i);
 
-      pieceType = choice.pieceType;
-      col = choice.chosenCol;
-    } else {
-      printf("Fichas disponíveis:\n");
-      printf("[0] Básicas: %d\n", game->players[i].baseCount);
-      printf("[1] Portais: %d\n", game->players[i].portalCount);
-      printf("[2] Explosivos: %d\n", game->players[i].explosiveCount);
-      while (pieceType == -1) {
-        printf("Escolha: ");
-        scanf("%d", &pieceType);
-
-        // Diminuição da quantidade de peças
-        if (pieceType == 0 && basicAvailable)
-          game->players[i].baseCount--;
-        else if (pieceType == 1 && portalAvailable)
-          game->players[i].portalCount--;
-        else if (pieceType == 2 && explosiveAvailable)
-          game->players[i].explosiveCount--;
-        else {
-          printf("\nFicha indisponível!\n");
-          pieceType = -1;
+        pieceType = choice.pieceType;
+        col = choice.chosenCol;
+      } else {
+        printf("Fichas disponíveis:\n");
+        printf("[0] Básicas: %d\n", game->players[i].baseCount);
+        printf("[1] Portais: %d\n", game->players[i].portalCount);
+        printf("[2] Explosivos: %d\n", game->players[i].explosiveCount);
+        while (pieceType == -1 || pieceType < 2) {
+          printf("Escolha: ");
+          scanf("%d", &pieceType);
         }
+
+        // Validação da coluna escolhida
+        while (1) {
+          printf("\nEscolha a coluna: ");
+          scanf("%d", &col);
+
+          if (col > 0 && col < 8) break;
+          else {
+            printf("Coluna invalida, por favor selecionar uma coluna entre 1 e 7\n");
+            if (game->players[i].isBot) {}
+          }
+        }
+        col--; // 0 passa a ser a primeira coluna
       }
 
-      // Validação da coluna escolhida
-      while (1) {
-        printf("\nEscolha a coluna: ");
-        scanf("%d", &col);
-
-        if (col > 0 && col < 8) break;
-        else {
-          printf("Coluna invalida, por favor selecionar uma coluna entre 1 e 7\n");
-          if (game->players[i].isBot) {}
-        }
-      }
-      col--; // 0 passa a ser a primeira coluna
-    }
-
-    int row;
-    char result;
-    int lastIsMine = lastPieceIsMine(7, 6, game->table, col);
-
-    if (pieceType == 1) {
+      
+      int lastIsMine = lastPieceIsMine(7, 6, game->table, col);
       int endEmpty = game->table[5][col].symbol == '.';
 
-      if (!endEmpty) {
-        removeLast(7, 6, game->table, col);
+      if (pieceType == 1) {
+        if (!endEmpty) {
+          removeLast(7, 6, game->table, col);
+          row = addPiece(7, 6, game->table, col, game->players[i], pieceType);
+          result = verifyLocalWin(7, 6, game->table, row, col);
+        } 
+      }  else if (lastIsMine) {
         row = addPiece(7, 6, game->table, col, game->players[i], pieceType);
+        applyExplosion(7, 6, game->table, row + 1, col);
+        result = globalWinVerify(7, 6, game->table, game->players[i], game->players);
+      }
+      else {
+        row = addPiece(7, 6, game->table, col, game->players[i], pieceType); 
         result = verifyLocalWin(7, 6, game->table, row, col);
       } 
-    }  else if (lastIsMine) {
-      row = addPiece(7, 6, game->table, col, game->players[i], pieceType);
-      applyExplosion(7, 6, game->table, row + 1, col);
-      result = globalWinVerify(7, 6, game->table, game->players[i], game->players);
-    }
+    } while (row == -1);
+
+    // Diminuição da quantidade de peças
+    if (pieceType == 0 && basicAvailable)
+      game->players[i].baseCount--;
+    else if (pieceType == 1 && portalAvailable)
+      game->players[i].portalCount--;
+    else if (pieceType == 2 && explosiveAvailable)
+      game->players[i].explosiveCount--;
     else {
-      row = addPiece(7, 6, game->table, col, game->players[i], pieceType); 
-      result = verifyLocalWin(7, 6, game->table, row, col);
-    } 
+      printf("\nFicha indisponível!\n");
+      pieceType = -1;
+    }
 
     if (result != '\0') {
       char winnerName[100];
