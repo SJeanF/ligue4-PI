@@ -6,4 +6,6 @@
 
 int portalActive(int c, int r, Position table[r][c], Player player, int chosenCol, int chosenRow, int pieceType);
 
+int removeLast(int c, int r, Position table[r][c], int chosenCol);
+
 #endif
